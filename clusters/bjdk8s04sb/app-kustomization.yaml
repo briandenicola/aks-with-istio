@@ -2,13 +2,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: flux-learning--source=flux-learning
+  name: flux-learning
   namespace: flux-system
 spec:
   interval: 5m0s
-  path: ./app--prune=true--validation=client
-  prune: false
+  path: ./app
+  prune: true
   sourceRef:
-    kind: ""
-    name: ""
+    kind: GitRepository
+    name: flux-learning
+  validation: client
 
