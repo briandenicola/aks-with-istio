@@ -5,7 +5,7 @@ A simple repo to learn flux
 # Code
 ```
 git
- lux --url=ssh://git@github.com/briandenicola/flux-learning \
+ flux --url=ssh://git@github.com/briandenicola/flux-learning \
   --branch=main \
   --path=./clusters/bjdk8s04sb \
   --private-key-file=/home/manager/.ssh/id_rsa
