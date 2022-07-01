@@ -21,7 +21,7 @@ resource "azapi_resource" "flux_config" {
     ]
 
     type        = "Microsoft.KubernetesConfiguration/fluxConfigurations@2022-03-01"
-    name        = "aks-fluxv2-extension"
+    name        = "aks-flux-extension"
     parent_id   = azurerm_kubernetes_cluster.this.id
 
     body = jsonencode({
@@ -31,7 +31,7 @@ resource "azapi_resource" "flux_config" {
             sourceKind    = "GitRepository"
             suspend       = false
             gitRepository = {
-                url                     = "https://github.com/briandenicola/aks-fluxv2-extension"
+                url                     = "https://github.com/briandenicola/aks-flux-extension"
                 timeoutInSeconds        = 600
                 syncIntervalInSeconds   = 300
                 repositoryRef           = {
