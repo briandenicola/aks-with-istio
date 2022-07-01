@@ -27,7 +27,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: httpbin
-        image: bjd145.azurecr.io/httpdemo:latest
+        image: bjd145/httpbin:1086
         imagePullPolicy: Always
         securityContext:
           runAsNonRoot: true
