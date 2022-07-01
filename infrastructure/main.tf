@@ -9,26 +9,26 @@ resource "random_id" "this" {
 }
 
 resource "random_pet" "this" {
-  length = 1
-  separator  = ""
+  length    = 1
+  separator = ""
 }
 
 resource "random_password" "password" {
-  length = 25
+  length  = 25
   special = true
 }
 
 locals {
-    location                    = "southcentralus"
-    resource_name               = "${random_pet.this.id}-${random_id.this.dec}"
-    aks_name                    = "${local.resource_name}-aks"
+  location      = "southcentralus"
+  resource_name = "${random_pet.this.id}-${random_id.this.dec}"
+  aks_name      = "${local.resource_name}-aks"
 }
 
 resource "azurerm_resource_group" "this" {
-  name                  = "${local.resource_name}_rg"
-  location              = local.location
-  
-  tags     = {
+  name     = "${local.resource_name}_rg"
+  location = local.location
+
+  tags = {
     Application = "todo"
     Components  = "aks; key vault; azure-sql; workload-identities"
     DeployedOn  = timestamp()

@@ -4,7 +4,7 @@ resource "kubernetes_secret" "http-credentials" {
     azapi_resource.flux_config
   ]
   metadata {
-    name = "http-credentials"
+    name      = "http-credentials"
     namespace = "flux-system"
   }
 
