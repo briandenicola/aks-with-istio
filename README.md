@@ -1,9 +1,19 @@
 # Overview
 
-A simple repo to learn flux
+This repository is an example on how to integrate AKS with the Fluxv2 extension using terraform.  Currently, terraform does not have a resource for the AKS Flux extension.  This example uses the new _azapi_resource_ resource to configure the extension
 
-# Code
+# Deployment 
+```bash
+az login 
+cd infrastructure 
+terraform init 
+terraform apply
+flux get all
+kubectl get pods
 ```
+
+# Flux Example
+```bash
 git
  flux --url=ssh://git@github.com/briandenicola/flux-learning \
   --branch=main \
