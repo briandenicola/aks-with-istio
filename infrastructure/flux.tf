@@ -1,33 +1,29 @@
-resource "azapi_update_resource" "flux_install" {
-  depends_on = [
-    azurerm_kubernetes_cluster.this
-  ]
-
-  type        = "Microsoft.KubernetesConfiguration/extensions@2021-09-01"
-  resource_id = azurerm_kubernetes_cluster.this.id
-
-  body = jsonencode({
-    properties = {
-        extensionType = "microsoft.flux"
-        autoUpgradeMinorVersion = true
-        scope = {
-            cluster = {
-                releaseNamespace = "flux-system"
-            }
-        }
-    }
-  })
-}
-
-resource "azapi_update_resource" "flux_config" {
+resource "azapi_resource" "flux_install" {
     depends_on = [
-        azapi_update_resource.flux_install
+        azurerm_kubernetes_cluster.this
     ]
 
-    type        = "Microsoft.KubernetesConfiguration/extensions@2021-09-01"
-    resource_id = azurerm_kubernetes_cluster.this.id
+    type = "Microsoft.KubernetesConfiguration/extensions@2021-09-01"
+    name = "flux"
+    parent_id = azurerm_kubernetes_cluster.this.id
 
-    body = jsonencode({})
+    body = jsonencode({
+        properties = {
+            extensionType = "microsoft.flux"
+            autoUpgradeMinorVersion = true
+        }
+    })
+}
+
+#resource "azapi_resource" "flux_config" {
+#    depends_on = [
+#        azapi_update_resource.flux_install
+#    ]
+
+#    type        = "Microsoft.KubernetesConfiguration/fluxConfigurations@2022-03-01"
+#    resource_id = azurerm_kubernetes_cluster.this.id
+
+#    body = jsonencode({})
     #  properties: {
     #    scope: 'cluster'
     #    namespace: 'gitops-demo'
@@ -54,4 +50,4 @@ resource "azapi_update_resource" "flux_config" {
     #    }
     #  }
     #}
-}
+#}
