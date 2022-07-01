@@ -5,6 +5,7 @@ resource "kubernetes_secret" "http-credentials" {
   ]
   metadata {
     name = "http-credentials"
+    namespace = "flux-system"
   }
 
   data = {
