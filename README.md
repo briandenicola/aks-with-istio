@@ -14,10 +14,9 @@ kubectl get pods
 
 # Flux Example
 ```bash
-git
- flux --url=ssh://git@github.com/briandenicola/flux-learning \
+flux boostrap github --url=ssh://git@github.com/briandenicola/flux-learning \
   --branch=main \
-  --path=./clusters/bjdk8s04sb \
+  --path=./clusters/aks \
   --private-key-file=/home/manager/.ssh/id_rsa
 
 git pull
