@@ -13,3 +13,7 @@ variable "service_mesh_type" {
   description = "Type of Service Mesh for cluster"
   default     = "istio"
 }
+
+variable "flux_secret_value" {
+  description = "The secret value for http-credentials"
+}

@@ -10,6 +10,6 @@ resource "kubernetes_secret" "http-credentials" {
 
   data = {
     username = "admin"
-    password = "P4ssw0rd"
+    password = var.flux_secret_value
   }
 }
