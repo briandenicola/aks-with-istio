@@ -4,4 +4,4 @@ resources:
   - ../common
   - app.yaml
 #patchesStrategicMerge:
-#  - addons.yaml
+#  - kured.yaml
