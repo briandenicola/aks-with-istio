@@ -1,0 +1,40 @@
+name: Creates an AKS cluster with Flex extension
+on:
+  workflow_dispatch:
+      
+jobs:
+  deploy:
+    name: Deploy Cluster
+    runs-on: self-hosted
+    env:
+        ARM_USE_MSI: true 
+        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+    defaults:
+      run:
+        working-directory: './infrastructure'
+
+    steps:
+    - name: "Checkout"
+      uses: actions/checkout@master
+
+    - name: Login to Azure
+      run: |
+        az login --identity 
+
+    - name: "Terraform Setup"
+      uses: hashicorp/setup-terraform@v1
+
+    - name: "Terraform Init"
+      id: init
+      run: terraform init
+      
+    - name: "Terraform Plan"
+      id: plan
+      run:  terraform plan -out="cluster.plan" -var "flux_secret_value=${{ secrets.FLUX_SECRET_VALUE }}" 
+      continue-on-error: false 
+
+    - name: "Terraform Apply"
+      id: apply
+      run: terraform apply -auto-approve cluster.plan
