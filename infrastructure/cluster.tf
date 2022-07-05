@@ -4,7 +4,7 @@ resource "azurerm_kubernetes_cluster" "this" {
       default_node_pool.0.node_count,
     ]
   }
-  
+
   name                            = local.aks_name
   resource_group_name             = azurerm_resource_group.this.name
   location                        = azurerm_resource_group.this.location
@@ -48,8 +48,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   network_profile {
-    dns_service_ip     = "10.190.0.10"
-    service_cidr       = "10.190.0.0/16"
+    dns_service_ip     = "100.66.0.10"
+    service_cidr       = "100.66.0.0/16"
     docker_bridge_cidr = "172.17.0.1/16"
     network_plugin     = "azure"
     load_balancer_sku  = "standard"
