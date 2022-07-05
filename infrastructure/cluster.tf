@@ -1,4 +1,10 @@
 resource "azurerm_kubernetes_cluster" "this" {
+  lifecycle {
+    ignore_changes = [
+      default_node_pool.0.node_count,
+    ]
+  }
+  
   name                            = local.aks_name
   resource_group_name             = azurerm_resource_group.this.name
   location                        = azurerm_resource_group.this.location
@@ -7,6 +13,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   sku_tier                        = "Paid"
   oidc_issuer_enabled             = true
   open_service_mesh_enabled       = true
+  azure_policy_enabled            = true
   api_server_authorized_ip_ranges = ["${chomp(data.http.myip.body)}/32"]
 
   azure_active_directory_role_based_access_control {
