@@ -55,6 +55,8 @@ kind: Service
 metadata:
   name: httpbinsvc
   namespace: default
+  annotations:
+   service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 spec:
   selector:
     app: httpbin
