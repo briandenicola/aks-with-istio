@@ -31,7 +31,7 @@ resource "azapi_resource" "flux_config" {
       sourceKind = "GitRepository"
       suspend    = false
       gitRepository = {
-        url                   = "https://github.com/briandenicola/aks-flux-extension"
+        url                   = local.flux_repository
         timeoutInSeconds      = 600
         syncIntervalInSeconds = 300
         repositoryRef = {
@@ -40,7 +40,7 @@ resource "azapi_resource" "flux_config" {
       }
       kustomizations : {
         aks = {
-          path                   = "./clusters/aks"
+          path                   = local.flux_path
           dependsOn              = []
           timeoutInSeconds       = 600
           syncIntervalInSeconds  = 300

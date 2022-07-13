@@ -19,9 +19,11 @@ resource "random_password" "password" {
 }
 
 locals {
-  location      = "southcentralus"
-  resource_name = "${random_pet.this.id}-${random_id.this.dec}"
-  aks_name      = "${local.resource_name}-aks"
+  location        = "southcentralus"
+  resource_name   = "${random_pet.this.id}-${random_id.this.dec}"
+  aks_name        = "${local.resource_name}-aks"
+  flux_path       = "./clusters/aks-01"
+  flux_repository = "https://github.com/briandenicola/aks-flux-extension"
 }
 
 resource "azurerm_resource_group" "this" {
@@ -29,8 +31,8 @@ resource "azurerm_resource_group" "this" {
   location = local.location
 
   tags = {
-    Application = "todo"
-    Components  = "aks; key vault; azure-sql; workload-identities"
+    Application = "httpdemo"
+    Components  = "aks; flux"
     DeployedOn  = timestamp()
   }
 }
