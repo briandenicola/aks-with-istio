@@ -15,5 +15,6 @@ variable "service_mesh_type" {
 }
 
 variable "flux_secret_value" {
+  default     = "Super secret value. Never check into github"
   description = "The secret value for http-credentials"
 }
