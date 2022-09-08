@@ -18,4 +18,4 @@ infra :
 creds :
 	cd infrastructure; export RG=`terraform output AKS_RESOURCE_GROUP | tr -d \"`; export AKS=`terraform output AKS_CLUSTER_NAME | tr -d \"` ;\
 	az aks get-credentials -g $${RG} -n $${AKS} ;\
-    kubelogin convert-kubeconfig -l azurecli
+	kubelogin convert-kubeconfig -l azurecli
