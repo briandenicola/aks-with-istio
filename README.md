@@ -4,11 +4,11 @@ This repository is an example on how to integrate AKS with the Fluxv2 extension 
 
 Sample [Flux](./Flux.md) commands 
 
-# Prerequisites
+# Prerequisites or Use DevContainer
 * Azure subscription
 * az cli
 * Terraform 
-* flux cli (to validate only)
+* flux
 
 # Deployment 
 ```bash
@@ -18,6 +18,10 @@ make infrastructure
 
 # Validate 
 ```bash
+  make check
+```
+
+## Result
 flux get all
   NAME                                    REVISION        SUSPENDED       READY   MESSAGE
   gitrepository/aks-flux-extension        main/2502d62    False           True    stored artifact for revision 'main/2502d6245af334ecda8775dae0dc6258a4a24a10'
