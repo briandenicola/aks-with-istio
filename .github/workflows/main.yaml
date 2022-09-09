@@ -1,4 +1,4 @@
-name: Creates an AKS cluster with Flex extension
+name: Creates an AKS cluster with Flux extension
 on:
   workflow_dispatch:
       
