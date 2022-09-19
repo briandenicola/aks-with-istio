@@ -48,8 +48,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   network_profile {
-    dns_service_ip     = "100.66.0.10"
-    service_cidr       = "100.66.0.0/16"
+    dns_service_ip     = "100.${random_integer.services_cidr.id}.0.10"
+    service_cidr       = "100.${random_integer.services_cidr.id}.0.0/16"
     docker_bridge_cidr = "172.17.0.1/16"
     network_plugin     = "azure"
     load_balancer_sku  = "standard"
