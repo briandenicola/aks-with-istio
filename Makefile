@@ -14,11 +14,12 @@ clean :
 environment : infra creds
 
 infra :
-	cd infrastructure; terraform init; terraform apply -auto-approve
+	terraform -chdir=./infrastructure init
+	terraform -chdir=./infrastructure apply -auto-approve
 
 creds :
-	export RG=`terraform output -raw -chdir=./infrastructure AKS_RESOURCE_GROUP` ;\
-	export AKS=`terraform output -raw -chdir=./infrastructure AKS_CLUSTER_NAME` ;\
+	export RG=`terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP` ;\
+	export AKS=`terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME` ;\
 	az aks get-credentials -g $${RG} -n $${AKS} ;\
 	kubelogin convert-kubeconfig -l azurecli
 
