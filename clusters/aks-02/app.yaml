@@ -2,11 +2,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: aks-flux-extension
+  name: httpbin-app
   namespace: flux-system
 spec:
   interval: 5m0s
-  path: ./app
+  path: ./apps/httpbin
   prune: true
   sourceRef:
     kind: GitRepository
