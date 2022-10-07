@@ -37,6 +37,9 @@ spec:
       containers:
       - name: otel-collector
         image: otel/opentelemetry-collector-contrib-dev:latest
+        command:
+          - "/otelcol-contrib"
+          - "--config=/conf/otel-collector-config.yaml"
         resources:
           limits:
             cpu: 1
@@ -46,6 +49,9 @@ spec:
             memory: 400Mi
         ports:
           - containerPort: 9411 # Default endpoint for Zipkin receiver.
+        volumeMounts:
+          - name: otel-collector-config-vol
+            mountPath: /conf
         livenessProbe:
           httpGet:
             path: /
@@ -54,3 +60,43 @@ spec:
           httpGet:
             path: /
             port: 13133
+      volumes:
+        - configMap:
+            name: otel-collector-conf
+            items:
+              - key: otel-collector-config
+                path: otel-collector-config.yaml
+          name: otel-collector-config-vol
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-conf
+  labels:
+    app: opentelemetry
+    component: otel-collector-conf
+data:
+  otel-collector-config: |
+    receivers:
+      zipkin:
+        endpoint: 0.0.0.0:9411
+    extensions:
+      health_check:
+      pprof:
+        endpoint: :1888
+      zpages:
+        endpoint: :55679
+    exporters:
+      logging:
+        loglevel: debug
+      azuremonitor:
+        endpoint: "https://dc.services.visualstudio.com/v2/track"
+        instrumentation_key: "d807cabf-181f-41c8-a2f1-f6cd53e5f059" #Replaceme
+        maxbatchinterval: 10s
+    service:
+      extensions: [pprof, zpages, health_check]
+      pipelines:
+        traces:
+          receivers: [zipkin]
+          exporters: [azuremonitor,logging]
+---
