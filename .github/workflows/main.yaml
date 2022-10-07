@@ -32,7 +32,7 @@ jobs:
       
     - name: "Terraform Plan"
       id: plan
-      run:  terraform plan -out="cluster.plan" -var "flux_secret_value=${{ secrets.FLUX_SECRET_VALUE }}" 
+      run:  terraform plan -out="cluster.plan" 
       continue-on-error: false 
 
     - name: "Terraform Apply"
