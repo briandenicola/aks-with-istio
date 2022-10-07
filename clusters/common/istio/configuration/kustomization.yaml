@@ -3,8 +3,5 @@ kind: Kustomization
 resources:
   - zipkin.yaml
   - container-azm-ms-agentconfig.yaml
-  - istio-operator-crd.yaml
   - istio-configuration.yaml
   - istio-cluster-roles.yaml
-  - default-ingress.yaml
-  - istio-ingress-gateway.yaml
