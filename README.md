@@ -22,6 +22,7 @@ make infrastructure
 ```
 
 ## Result
+```
 flux get all
   NAME                                    REVISION        SUSPENDED       READY   MESSAGE
   gitrepository/aks-flux-extension        main/2502d62    False           True    stored artifact for revision 'main/2502d6245af334ecda8775dae0dc6258a4a24a10'
