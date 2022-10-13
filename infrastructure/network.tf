@@ -17,6 +17,17 @@ resource "azurerm_subnet" "pods" {
   resource_group_name  = azurerm_resource_group.this.name
   virtual_network_name = azurerm_virtual_network.this.name
   address_prefixes     = [ local.pods_subnet_cidir ]
+  
+  delegation {
+    name = "aks-delegation"
+
+    service_delegation {
+      name    = "Microsoft.ContainerService/managedClusters"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/join/action",
+      ]  
+    }
+  }
 }
 
 resource "azurerm_network_security_group" "this" {
