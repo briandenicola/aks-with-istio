@@ -39,7 +39,8 @@ resource "azurerm_kubernetes_cluster" "this" {
     node_count          = 3
     vm_size             = "Standard_DS2_v2"
     os_disk_size_gb     = 30
-    vnet_subnet_id      = azurerm_subnet.this.id
+    vnet_subnet_id      = azurerm_subnet.nodes.id
+    pod_subnet_id       = azurerm_subnet.pods.id
     type                = "VirtualMachineScaleSets"
     enable_auto_scaling = true
     min_count           = 3
