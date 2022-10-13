@@ -32,4 +32,4 @@ creds :
 
 check : 
 	flux get all
-	kubectl get service, pod, deployment
+	kubectl get service,pod,deployment
