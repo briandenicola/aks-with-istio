@@ -55,12 +55,30 @@ kind: Service
 metadata:
   name: httpbinsvc
   namespace: default
-  annotations:
-   service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+  #annotations:
+  # service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 spec:
   selector:
     app: httpbin
   ports:
   - port: 80
     targetPort: 8080
-  type: LoadBalancer
+  type: ClusterIP
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name:  httpbinsvc-vs
+  namespace: default
+spec:
+  hosts:
+  -  httpbin.bjdazure.tech
+  gateways:
+  -  default-bjdazure-tech-gw
+  http:
+  - route:
+    - destination:
+        host: httpbinsvc
+        port:
+          number: 80
+
