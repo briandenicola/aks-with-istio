@@ -8,7 +8,7 @@ help :
 	@echo "   make clean         - delete the AKS cluster and cleans up"
 
 clean :
-	export RG=`terraform output -raw -chdir=./infrastructure AKS_RESOURCE_GROUP` ;\
+	export RG=`terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP` ;\
 	rm -rf .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info ;\
 	az group delete -n $${RG} --yes || true
 
