@@ -1,20 +1,3 @@
-apiVersion: secrets-store.csi.x-k8s.io/v1alpha1
-kind: SecretProviderClass
-metadata:
-  name: otel-collector-config
-  namespace: default
-spec:
-  provider: azure
-  parameters:
-    usePodIdentity: "true"                                        
-    keyvaultName: default_cluster_name-kv                                     
-    objects:  |
-      array:
-        - |
-          objectName: otel-collector-config
-          objectType: secret
-    tenantId: 16b3c013-d300-468d-ac64-7eda0820b6d3
----
 apiVersion: v1
 kind: Service
 metadata:
@@ -50,14 +33,13 @@ spec:
       labels:
         app: opentelemetry
         component: otel-collector
-        aadpodidbinding: default_cluster_name-istio-pod-identity
     spec:
       containers:
       - name: otel-collector
         image: otel/opentelemetry-collector-contrib-dev:latest
         command:
           - "/otelcontribcol"
-          - "--config=/conf/otel-collector-config"
+          - "--config=/conf/otel-collector-config.yaml"
         resources:
           limits:
             cpu: 1
@@ -79,9 +61,43 @@ spec:
             path: /
             port: 13133
       volumes:
-      - name: otel-collector-config-vol
-        csi:
-          driver: secrets-store.csi.k8s.io
-          readOnly: true
-          volumeAttributes:
-            secretProviderClass: "otel-collector-config"
+        - configMap:
+            name: otel-collector-conf
+            items:
+              - key: otel-collector-config
+                path: otel-collector-config.yaml
+          name: otel-collector-config-vol
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-conf
+  namespace: default
+  labels:
+    app: opentelemetry
+    component: otel-collector-conf
+data:
+  otel-collector-config: |
+    receivers:
+      zipkin:
+        endpoint: 0.0.0.0:9411
+    extensions:
+      health_check:
+      pprof:
+        endpoint: :1888
+      zpages:
+        endpoint: :55679
+    exporters:
+      logging:
+        loglevel: debug
+      azuremonitor:
+        endpoint: "https://dc.services.visualstudio.com/v2/track"
+        instrumentation_key: "d807cabf-181f-41c8-a2f1-f6cd53e5f059" #Replaceme
+        maxbatchinterval: 10s
+    service:
+      extensions: [pprof, zpages, health_check]
+      pipelines:
+        traces:
+          receivers: [zipkin]
+          exporters: [azuremonitor,logging]
+---

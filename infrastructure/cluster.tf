@@ -12,7 +12,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   dns_prefix                      = local.aks_name
   sku_tier                        = "Paid"
   oidc_issuer_enabled             = true
-  open_service_mesh_enabled       = true
+  open_service_mesh_enabled       = false
   azure_policy_enabled            = true
   api_server_authorized_ip_ranges = ["${chomp(data.http.myip.body)}/32"]
 
@@ -39,7 +39,8 @@ resource "azurerm_kubernetes_cluster" "this" {
     node_count          = 3
     vm_size             = "Standard_DS2_v2"
     os_disk_size_gb     = 30
-    vnet_subnet_id      = azurerm_subnet.this.id
+    vnet_subnet_id      = azurerm_subnet.nodes.id
+    pod_subnet_id       = azurerm_subnet.pods.id
     type                = "VirtualMachineScaleSets"
     enable_auto_scaling = true
     min_count           = 3

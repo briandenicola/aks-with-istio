@@ -39,11 +39,41 @@ resource "azapi_resource" "flux_config" {
         }
       }
       kustomizations : {
-        aks = {
-          path                   = local.flux_path
+        istio-crd = {
+          path                   = local.istio_crd_path
           dependsOn              = []
           timeoutInSeconds       = 600
-          syncIntervalInSeconds  = 300
+          syncIntervalInSeconds  = 120
+          retryIntervalInSeconds = 300
+          prune                  = true
+        }
+        istio-cfg = {
+          path                   = local.istio_cfg_path
+          dependsOn              = [
+            "istio-crd"
+          ]
+          timeoutInSeconds       = 600
+          syncIntervalInSeconds  = 120
+          retryIntervalInSeconds = 300
+          prune                  = true
+        }
+        istio-gw = {
+          path                   = local.istio_gw_path
+          dependsOn              = [
+            "istio-cfg"
+          ]
+          timeoutInSeconds       = 600
+          syncIntervalInSeconds  = 120
+          retryIntervalInSeconds = 300
+          prune                  = true
+        }
+        apps = {
+          path                   = local.app_path
+          dependsOn              = [
+            "istio-cfg"
+          ]
+          timeoutInSeconds       = 600
+          syncIntervalInSeconds  = 120
           retryIntervalInSeconds = 300
           prune                  = true
         }
