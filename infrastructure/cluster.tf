@@ -11,9 +11,13 @@ resource "azurerm_kubernetes_cluster" "this" {
   node_resource_group             = "${local.resource_name}_k8s_nodes_rg"
   dns_prefix                      = local.aks_name
   sku_tier                        = "Paid"
+  automatic_channel_upgrade       = "patch"
   oidc_issuer_enabled             = true
-  open_service_mesh_enabled       = false
+  workload_identity_enabled       = true
   azure_policy_enabled            = true
+  local_account_disabled          = true 
+  open_service_mesh_enabled       = false
+  run_command_enabled             = false
   api_server_authorized_ip_ranges = ["${chomp(data.http.myip.response_body)}/32"]
 
   azure_active_directory_role_based_access_control {
@@ -46,6 +50,9 @@ resource "azurerm_kubernetes_cluster" "this" {
     min_count           = 3
     max_count           = 10
     max_pods            = 40
+    upgrade_settings {
+      max_surge         = "25%"
+    }  
   }
 
   network_profile {
@@ -53,9 +60,14 @@ resource "azurerm_kubernetes_cluster" "this" {
     service_cidr       = "100.${random_integer.services_cidr.id}.0.0/16"
     docker_bridge_cidr = "172.17.0.1/16"
     network_plugin     = "azure"
+    network_policy     = "calico"
     load_balancer_sku  = "standard"
   }
 
+  auto_scaler_profile {
+    max_unready_nodes   = "1"
+    
+  }
   oms_agent {
     log_analytics_workspace_id = azurerm_log_analytics_workspace.this.id
   }
