@@ -45,6 +45,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     os_disk_size_gb     = 30
     vnet_subnet_id      = azurerm_subnet.nodes.id
     pod_subnet_id       = azurerm_subnet.pods.id
+    os_sku              = "CBLMariner"
     type                = "VirtualMachineScaleSets"
     enable_auto_scaling = true
     min_count           = 3
