@@ -65,6 +65,17 @@ resource "azurerm_kubernetes_cluster" "this" {
     load_balancer_sku  = "standard"
   }
 
+  maintenance_window {
+    allowed {
+      day               = "Friday"
+      hours             = [21, 22, 22] 
+    }
+    allowed {
+      day               = "Sunday"
+      hours             = [1, 2, 3, 4, 5] 
+    }
+  }
+
   auto_scaler_profile {
     max_unready_nodes   = "1"
   }
@@ -78,3 +89,4 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
 }
+
