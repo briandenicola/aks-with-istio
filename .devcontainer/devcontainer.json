@@ -22,7 +22,10 @@
 		"kubectl-helm-minikube": "1.23",
 		"terraform": "latest",
 		"azure-cli": "latest",
-		"docker-from-docker": "latest"
+		"docker-from-docker": "latest",
+		"ghcr.io/devcontainers/features/sshd:1": {
+			"version": "latest"
+		}
 	},
 
 	"waitFor": "postCreateCommand",
