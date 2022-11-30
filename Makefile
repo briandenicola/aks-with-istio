@@ -9,6 +9,7 @@ help :
 
 clean :
 	export RG=`terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP` ;\
+	cd infrastructure ;\
 	rm -rf .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info ;\
 	az group delete -n $${RG} --yes || true
 
