@@ -13,7 +13,7 @@ metadata:
   name: httpbin
   namespace: apps
 spec:
-  replicas: 5
+  replicas: 3
   selector:
     matchLabels:
       app: httpbin
@@ -55,6 +55,11 @@ spec:
         volumeMounts:
         - mountPath: /usr/tmp
           name: tmp-volume
+      tolerations:
+      - key: "reservedFor"
+        operator: "Equal"
+        value: "apps"
+        effect: "NoSchedule"
       volumes:
       - name: tmp-volume
         emptyDir: {}
