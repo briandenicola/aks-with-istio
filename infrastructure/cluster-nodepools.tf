@@ -9,7 +9,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "default_app_node_pool" {
   vnet_subnet_id        = azurerm_subnet.nodes.id
   pod_subnet_id         = azurerm_subnet.pods.id
   //orchestrator_version  = "1.24.6"
-  vm_size               = "Standard_DS2_v2"
+  vm_size               = "Standard_B4ms"
   enable_auto_scaling   = true
   mode                  = "User"
   os_sku                = "CBLMariner"
