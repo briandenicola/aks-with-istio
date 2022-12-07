@@ -1,8 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: apps
+  labels:
+    istio-injection: enabled
+  annotations:
+    scheduler.alpha.kubernetes.io/defaultTolerations: '[{"key": "reservedFor", "operator": "Equal", "effect": "NoSchedule", "value": "apps"}]'
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: httpbin
-  namespace: default
+  namespace: apps
 spec:
   replicas: 5
   selector:
@@ -54,7 +63,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: httpbinsvc
-  namespace: default
+  namespace: apps
   #annotations:
   # service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 spec:
@@ -69,12 +78,12 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name:  httpbinsvc-vs
-  namespace: default
+  namespace: apps
 spec:
   hosts:
   -  httpbin.bjdazure.tech
   gateways:
-  -  default-bjdazure-tech-gw
+  -  default/default-bjdazure-tech-gw
   http:
   - route:
     - destination:

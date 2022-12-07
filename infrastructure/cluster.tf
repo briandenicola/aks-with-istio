@@ -18,6 +18,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   local_account_disabled          = true 
   open_service_mesh_enabled       = false
   run_command_enabled             = false
+  kubernetes_version              = "1.24.6"
   api_server_authorized_ip_ranges = ["${chomp(data.http.myip.response_body)}/32"]
 
   azure_active_directory_role_based_access_control {
@@ -45,6 +46,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     os_disk_size_gb     = 30
     vnet_subnet_id      = azurerm_subnet.nodes.id
     pod_subnet_id       = azurerm_subnet.pods.id
+    orchestrator_version = "1.23.12"
     os_sku              = "CBLMariner"
     type                = "VirtualMachineScaleSets"
     enable_auto_scaling = true
