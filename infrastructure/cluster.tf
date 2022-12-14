@@ -24,6 +24,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   run_command_enabled             = false
   kubernetes_version              = data.azurerm_kubernetes_service_versions.current.versions[length(data.azurerm_kubernetes_service_versions.current.versions)-2]
   api_server_authorized_ip_ranges = ["${chomp(data.http.myip.response_body)}/32"]
+  image_cleaner_enabled           = true
+  image_cleaner_interval_hours    = 48
 
   azure_active_directory_role_based_access_control {
     managed                = true
