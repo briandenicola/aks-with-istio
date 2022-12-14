@@ -87,6 +87,13 @@ resource "azurerm_kubernetes_cluster" "this" {
     max_unready_nodes   = "1"
   }
   
+  storage_profile {
+    blob_driver_enabled = true
+    disk_driver_enabled = true
+    disk_driver_version = "v2"
+    file_driver_enabled = true
+  }
+
   oms_agent {
     log_analytics_workspace_id = azurerm_log_analytics_workspace.this.id
   }
