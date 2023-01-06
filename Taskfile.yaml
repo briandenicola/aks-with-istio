@@ -29,7 +29,7 @@ tasks:
   clean:
     cmds:
     - cd infrastructure ;
-      rm -rf .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info
+      rm -rf terraform.tfstate.d .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info
     - az group delete -n {{.RG}} --yes || true
     vars:
       RG: 
