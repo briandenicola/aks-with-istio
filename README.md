@@ -6,19 +6,26 @@ Sample [Flux](./Flux.md) commands
 
 # Prerequisites or Use DevContainer
 * Azure subscription
-* az cli
-* Terraform 
-* flux
+* [Azure Cli](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+* [Terraform](https://developer.hashicorp.com/terraform/downloads)
+* [flux](https://fluxcd.io/flux/installation/)
+* [Taskfile](https://taskfile.dev/installation)
 
-# Deployment 
+# Deployment - Default Region (South Central)
 ```bash
 az login 
-make infrastructure 
+task infrastructure 
+```
+
+## Deployment - Alternate Region
+```bash
+az login 
+task infrastructure -- northcentralus
 ```
 
 # Validate 
 ```bash
-  make check
+task validate
 ```
 
 ## Result
@@ -64,6 +71,6 @@ deployment.apps/otel-collector         1/1     1            1           7m55s
 
 # Clean Up
 ```bash
-make clean
+task clean
 ```
 
