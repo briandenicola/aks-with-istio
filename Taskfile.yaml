@@ -2,6 +2,7 @@ version: '3'
 
 tasks:
   environment:
+    desc: Builds end to end an AKS environment
     cmds:
     - terraform -chdir=./infrastructure workspace new {{.REGION}} || true
     - terraform -chdir=./infrastructure workspace select {{.REGION}}
@@ -12,6 +13,7 @@ tasks:
       REGION: '{{default "southcentralus" .CLI_ARGS}}'
     
   creds:
+    desc: Grab AKS credentials 
     cmds:
     - az aks get-credentials -g {{.RG}} -n {{.AKS}} --overwrite-existing
     - kubelogin convert-kubeconfig -l azurecli
@@ -22,11 +24,13 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
 
   validate: 
+    desc: Shows all pods and services deployed in the cluster
     cmds:
     - kubectl get pods,services,deployments
     - flux get all
 
   clean:
+    desc: Destroys all Azure resources and cleans up terraform
     cmds:
     - cd infrastructure ;
       rm -rf terraform.tfstate.d .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info
