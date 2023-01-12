@@ -33,7 +33,7 @@ locals {
   location              =  var.region
   resource_name         = "${random_pet.this.id}-${random_id.this.dec}"
   aks_name              = "${local.resource_name}-aks"
-  app_path              = "./clusters/aks-01"
+  app_path              = "./clusters/cluster-01"
   istio_crd_path        = "./clusters/common/istio/customresources"
   istio_cfg_path        = "./clusters/common/istio/configuration"
   istio_gw_path         = "./clusters/common/istio/gateway"
@@ -49,7 +49,7 @@ resource "azurerm_resource_group" "this" {
 
   tags = {
     Application = "httpdemo"
-    Components  = "aks; flux"
+    Components  = "aks; flux; istio; kured; dapr"
     DeployedOn  = timestamp()
   }
 }
