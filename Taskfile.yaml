@@ -1,7 +1,7 @@
 version: '3'
 
 tasks:
-  environment:
+  up:
     desc: Builds end to end an AKS environment
     cmds:
     - terraform -chdir=./infrastructure workspace new {{.REGION}} || true
@@ -29,7 +29,7 @@ tasks:
     - kubectl get pods,services,deployments
     - flux get all
 
-  clean:
+  down:
     desc: Destroys all Azure resources and cleans up terraform
     cmds:
     - cd infrastructure ;

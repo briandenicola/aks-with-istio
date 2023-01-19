@@ -14,7 +14,7 @@ Sample [Flux](./Flux.md) commands
 # Deployment - Default Region (South Central)
 ```bash
 az login 
-task infrastructure 
+task up 
 ```
 
 ## Deployment - Alternate Region
@@ -25,7 +25,7 @@ task infrastructure -- northcentralus
 
 # Validate 
 ```bash
-task validate
+task down 
 ```
 
 ## Result
