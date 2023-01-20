@@ -20,7 +20,7 @@ task up
 ## Deployment - Alternate Region
 ```bash
 az login 
-task infrastructure -- northcentralus
+task up -- northcentralus
 ```
 
 # Validate 
