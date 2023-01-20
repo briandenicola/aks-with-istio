@@ -1,6 +1,7 @@
 resource "azapi_resource" "flux_install" {
   depends_on = [
-    azurerm_kubernetes_cluster.this
+    azurerm_kubernetes_cluster.this,
+    azurerm_kubernetes_cluster_node_pool.default_app_node_pool
   ]
 
   type      = "Microsoft.KubernetesConfiguration/extensions@2021-09-01"
