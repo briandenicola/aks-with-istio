@@ -4,7 +4,7 @@ resource "azapi_resource" "flux_install" {
     azurerm_kubernetes_cluster_node_pool.default_app_node_pool
   ]
 
-  type      = "Microsoft.KubernetesConfiguration/extensions@2022-07-01"
+  type      = "Microsoft.KubernetesConfiguration/extensions@2021-09-01"
   name      = "flux"
   parent_id = azurerm_kubernetes_cluster.this.id
 
@@ -21,7 +21,7 @@ resource "azapi_resource" "flux_config" {
     azapi_resource.flux_install
   ]
 
-  type      = "Microsoft.KubernetesConfiguration/fluxConfigurations@2022-07-01"
+  type      = "Microsoft.KubernetesConfiguration/fluxConfigurations@2022-03-01"
   name      = "aks-flux-extension"
   parent_id = azurerm_kubernetes_cluster.this.id
 
