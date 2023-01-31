@@ -3,4 +3,4 @@ kind: Kustomization
 resources:
   - kured.yaml
   - dapr.yaml
-  - keda.yaml
+  #- keda.yaml

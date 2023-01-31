@@ -87,6 +87,10 @@ resource "azurerm_kubernetes_cluster" "this" {
     max_unready_nodes   = "1"
   }
   
+  workload_autoscaler_profile {
+    keda_enabled        = true
+  }
+
   storage_profile {
     blob_driver_enabled = true
     disk_driver_enabled = true
