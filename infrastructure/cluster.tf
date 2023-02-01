@@ -23,7 +23,6 @@ resource "azurerm_kubernetes_cluster" "this" {
   open_service_mesh_enabled       = false
   run_command_enabled             = false
   kubernetes_version              = data.azurerm_kubernetes_service_versions.current.versions[length(data.azurerm_kubernetes_service_versions.current.versions)-2]
-  api_server_authorized_ip_ranges = ["${chomp(data.http.myip.response_body)}/32"]
   image_cleaner_enabled           = true
   image_cleaner_interval_hours    = 48
 
@@ -70,6 +69,10 @@ resource "azurerm_kubernetes_cluster" "this" {
     network_plugin     = "azure"
     network_policy     = "calico"
     load_balancer_sku  = "standard"
+  }
+
+  api_server_access_profile {
+    authorized_ip_ranges  = ["${chomp(data.http.myip.response_body)}/32"]
   }
 
   maintenance_window {
