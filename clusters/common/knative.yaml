@@ -9,7 +9,7 @@ spec:
     - name: istio-system
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: aks-flux-extension
   path: ./clusters/common/knative
   prune: true
   validation: client
