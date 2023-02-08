@@ -75,17 +75,16 @@ resource "azurerm_kubernetes_cluster" "this" {
     authorized_ip_ranges  = ["${chomp(data.http.myip.response_body)}/32"]
   }
 
-  # Moved to Preview Microsoft.Maintenance/configurationAssignments
-  #maintenance_window {
-  #  allowed {
-  #    day               = "Friday"
-  #    hours             = [21, 22, 22] 
-  #  }
-  #  allowed {
-  #    day               = "Sunday"
-  #    hours             = [1, 2, 3, 4, 5] 
-  #  }
-  #}
+  maintenance_window {
+    allowed {
+      day               = "Friday"
+      hours             = [20, 21, 22, 23] 
+    }
+    allowed {
+      day               = "Sunday"
+      hours             = [1, 2, 3, 4, 5] 
+    }
+  }
 
   auto_scaler_profile {
     max_unready_nodes   = "1"
