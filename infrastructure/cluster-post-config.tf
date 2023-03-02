@@ -20,3 +20,21 @@ resource "azapi_resource" "maintenance_window" {
     }
   })
 }
+
+resource "azapi_update_resource" "this" {
+  depends_on = [
+    azurerm_kubernetes_cluster.this,
+    azurerm_kubernetes_cluster_node_pool.default_app_node_pool
+  ]
+
+  type        = "Microsoft.ContainerService/managedClusters@2022-11-02-preview"
+  resource_id = azurerm_kubernetes_cluster.this.id
+
+  body = jsonencode({
+    properties = {
+      autoUpgradeProfile = {
+        nodeOSUpgradeChannel = "NodeImage"
+      }
+    }
+  })
+}
