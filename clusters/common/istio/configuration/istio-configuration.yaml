@@ -10,6 +10,14 @@ metadata:
 apiVersion: v1
 kind: Namespace
 metadata:
+  name: istio-gateway
+  labels:
+    istio-operator-managed: Reconcile
+    istio-injection: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
   name: default
   labels:
     istio-injection: enabled
@@ -46,14 +54,19 @@ spec:
           minAvailable: 1
     egressGateways:
     - name: istio-egressgateway
-      namespace: default
+      namespace: istio-gateway
       enabled: true
       k8s:
         podDisruptionBudget:
           minAvailable: 1
+        tolerations:
+        - key: "reservedFor"
+          operator: "Equal"
+          value: "istio-gateway"
+          effect: "NoSchedule"
     ingressGateways:
     - name: istio-ingressgateway
-      namespace: default
+      namespace: istio-gateway
       enabled: true
       label:
         aadpodidbinding: default_cluster_name-istio-pod-identity
@@ -62,6 +75,11 @@ spec:
           minAvailable: 1
         serviceAnnotations:
           service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+        tolerations:
+        - key: "reservedFor"
+          operator: "Equal"
+          value: "istio-gateway"
+          effect: "NoSchedule"
   addonComponents:
     prometheus:
       enabled: false

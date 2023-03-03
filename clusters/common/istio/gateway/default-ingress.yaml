@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ingress
-  namespace: default
+  namespace: istio-gateway
 spec:
   selector:
     matchLabels:
@@ -36,7 +36,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: ingress-svc
-  namespace: default
+  namespace: istio-gateway
   labels:
     version: "1.0"
 spec:
