@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ingress
+  name: default-backend
   namespace: istio-gateway
 spec:
   selector:
     matchLabels:
-      app: ingress
+      app: default-ingress-backend
   replicas: 1
   strategy:
     type: RollingUpdate
@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       labels:
-        app: ingress
+        app: default-ingress-backend
     spec:
       containers:
       - name: ingress
@@ -40,13 +40,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ingress-svc
+  name: default-backend-svc
   namespace: istio-gateway
   labels:
     version: "1.0"
 spec:
   selector:
-    app: ingress
+    app: default-ingress-backend
   ports:
   - port: 80
     targetPort: 80
