@@ -14,6 +14,8 @@ metadata:
   labels:
     istio-operator-managed: Reconcile
     istio-injection: enabled
+  annotations:
+    scheduler.alpha.kubernetes.io/defaultTolerations: '[{"key": "reservedFor", "operator": "Equal", "effect": "NoSchedule", "value": "istio-gateway"}]'
 ---
 apiVersion: v1
 kind: Namespace
