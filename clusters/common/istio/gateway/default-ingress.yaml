@@ -31,6 +31,11 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "500m"
+      tolerations:
+      - key: "reservedFor"
+        operator: "Equal"
+        value: "istio-gateway"
+        effect: "NoSchedule"
 ---
 apiVersion: v1
 kind: Service
