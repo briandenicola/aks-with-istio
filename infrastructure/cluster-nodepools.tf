@@ -1,6 +1,6 @@
 resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   depends_on = [
-    azapi_update_resource.this
+    azurerm_kubernetes_cluster.this
   ]
   lifecycle {
     ignore_changes = [
@@ -29,7 +29,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
 
 resource "azurerm_kubernetes_cluster_node_pool" "istio_node_pool" {
   depends_on = [
-    azapi_update_resource.this
+    azurerm_kubernetes_cluster.this
   ]
 
   lifecycle {
