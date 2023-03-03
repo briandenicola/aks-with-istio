@@ -44,7 +44,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "istio_node_pool" {
   pod_subnet_id         = azurerm_subnet.pods.id
   vm_size               = "Standard_B4ms"
   enable_auto_scaling   = true
-  mode                  = "System"
+  mode                  = "User"
   os_sku                = "CBLMariner"
   os_disk_size_gb       = 30
   node_count            = 1
