@@ -69,8 +69,6 @@ kind: Service
 metadata:
   name: httpbinsvc
   namespace: apps
-  #annotations:
-  # service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 spec:
   selector:
     app: httpbin
@@ -88,7 +86,7 @@ spec:
   hosts:
   -  httpbin.bjdazure.tech
   gateways:
-  -  default/default-bjdazure-tech-gw
+  -  istio-gateway/default-bjdazure-tech-gw
   http:
   - route:
     - destination:
