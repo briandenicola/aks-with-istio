@@ -1,8 +1,15 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: otel-system
+  labels:
+    istio-injection: enabled
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: otel-collector
-  namespace: default
+  namespace: otel-system
   labels:
     app: opencesus
     component: otel-collector
@@ -19,7 +26,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: otel-collector
-  namespace: default
+  namespace: otel-system
   labels:
     app: opentelemetry
     component: otel-collector
@@ -72,7 +79,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: otel-collector-conf
-  namespace: default
+  namespace: otel-system
   labels:
     app: opentelemetry
     component: otel-collector-conf

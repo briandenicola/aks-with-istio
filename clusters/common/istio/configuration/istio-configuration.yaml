@@ -41,12 +41,12 @@ spec:
     defaultConfig:
       tracing:
         zipkin:
-          address: otel-collector.default.svc.cluster.local:9411
+          address: otel-collector.otel-system.svc.cluster.local:9411
   values:
     global:
       tracer:
         zipkin:
-          address: otel-collector.default.svc.cluster.local:9411
+          address: otel-collector.otel-system.svc.cluster.local:9411
   components:
     cni:
       enabled: true
