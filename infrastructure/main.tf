@@ -34,7 +34,7 @@ locals {
   resource_name         = "${random_pet.this.id}-${random_id.this.dec}"
   aks_name              = "${local.resource_name}-aks"
   app_path              = "./clusters/cluster-01"
-  istio_crd_path        = "./clusters/common/istio/customresources"
+  crd_path              = "./clusters/common/customresourcedefinitions"
   istio_cfg_path        = "./clusters/common/istio/configuration"
   istio_gw_path         = "./clusters/common/istio/gateway"
   flux_repository       = "https://github.com/briandenicola/aks-flux-extension"

@@ -41,7 +41,7 @@ resource "azapi_resource" "flux_config" {
       }
       kustomizations : {
         istio-crd = {
-          path                   = local.istio_crd_path
+          path                   = local.crd_path
           dependsOn              = []
           timeoutInSeconds       = 600
           syncIntervalInSeconds  = 120
