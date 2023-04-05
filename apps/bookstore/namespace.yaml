@@ -5,3 +5,5 @@ metadata:
   name: bookstore
   labels:
     istio-injection: enabled
+  annotations:
+    scheduler.alpha.kubernetes.io/defaultTolerations: '[{"key": "reservedFor", "operator": "Equal", "effect": "NoSchedule", "value": "apps"}]'
