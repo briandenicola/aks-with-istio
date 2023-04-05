@@ -23,10 +23,11 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name:  eshopondapr-201
-  namespace: eshopondapr
+  name:  eshopondapr
+  namespace: flux-system
 spec:
   interval: 5m
+  targetNamespace: eshopondapr
   chart:
     spec:
       chart: eshopondapr
