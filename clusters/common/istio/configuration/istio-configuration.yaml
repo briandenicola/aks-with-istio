@@ -70,8 +70,6 @@ spec:
     - name: istio-ingressgateway
       namespace: istio-gateway
       enabled: true
-      label:
-        aadpodidbinding: default_cluster_name-istio-pod-identity
       k8s:
         podDisruptionBudget:
           minAvailable: 1
