@@ -9,22 +9,28 @@ resource "azurerm_kubernetes_cluster" "this" {
     ]
   }
 
-  name                            = local.aks_name
-  resource_group_name             = azurerm_resource_group.this.name
-  location                        = azurerm_resource_group.this.location
-  node_resource_group             = "${local.resource_name}_k8s_nodes_rg"
-  dns_prefix                      = local.aks_name
-  sku_tier                        = "Paid"
-  automatic_channel_upgrade       = "patch"
-  oidc_issuer_enabled             = true
-  workload_identity_enabled       = true
-  azure_policy_enabled            = true
-  local_account_disabled          = true 
-  open_service_mesh_enabled       = false
-  run_command_enabled             = false
-  kubernetes_version              = data.azurerm_kubernetes_service_versions.current.versions[length(data.azurerm_kubernetes_service_versions.current.versions)-2]
-  image_cleaner_enabled           = true
-  image_cleaner_interval_hours    = 48
+  name                         = local.aks_name
+  resource_group_name          = azurerm_resource_group.this.name
+  location                     = azurerm_resource_group.this.location
+  node_resource_group          = "${local.resource_name}_k8s_nodes_rg"
+  dns_prefix                   = local.aks_name
+  sku_tier                     = "Standard"
+  automatic_channel_upgrade    = "patch"
+  oidc_issuer_enabled          = true
+  workload_identity_enabled    = true
+  azure_policy_enabled         = true
+  local_account_disabled       = true
+  open_service_mesh_enabled    = false
+  run_command_enabled          = false
+  kubernetes_version           = data.azurerm_kubernetes_service_versions.current.versions[length(data.azurerm_kubernetes_service_versions.current.versions) - 2]
+  image_cleaner_enabled        = true
+  image_cleaner_interval_hours = 48
+
+  api_server_access_profile {
+    vnet_integration_enabled = true
+    subnet_id                = azurerm_subnet.api.id
+    authorized_ip_ranges     = ["${chomp(data.http.myip.response_body)}/32"]
+  }
 
   azure_active_directory_role_based_access_control {
     managed                = true
@@ -48,50 +54,47 @@ resource "azurerm_kubernetes_cluster" "this" {
     name                = "default"
     node_count          = 3
     vm_size             = "Standard_DS2_v2"
-    os_disk_size_gb     = 30
+    os_disk_size_gb     = 60
     vnet_subnet_id      = azurerm_subnet.nodes.id
-    pod_subnet_id       = azurerm_subnet.pods.id
     os_sku              = "CBLMariner"
+    os_disk_type        = "Ephemeral"
     type                = "VirtualMachineScaleSets"
     enable_auto_scaling = true
     min_count           = 3
-    max_count           = 10
+    max_count           = 9
     max_pods            = 40
     upgrade_settings {
-      max_surge         = "25%"
-    }  
+      max_surge = "33%"
+    }
   }
 
   network_profile {
-    dns_service_ip     = "100.${random_integer.services_cidr.id}.0.10"
-    service_cidr       = "100.${random_integer.services_cidr.id}.0.0/16"
-    docker_bridge_cidr = "172.17.0.1/16"
-    network_plugin     = "azure"
-    network_policy     = "calico"
-    load_balancer_sku  = "standard"
-  }
-
-  api_server_access_profile {
-    authorized_ip_ranges  = ["${chomp(data.http.myip.response_body)}/32"]
+    dns_service_ip      = "100.${random_integer.services_cidr.id}.0.10"
+    service_cidr        = "100.${random_integer.services_cidr.id}.0.0/16"
+    pod_cidr            = "100.${random_integer.pod_cidr.id}.0.0/16"
+    network_plugin      = "azure"
+    network_plugin_mode = "Overlay"
+    network_policy      = "calico"
+    load_balancer_sku   = "standard"
   }
 
   maintenance_window {
     allowed {
-      day               = "Friday"
-      hours             = [20, 21, 22, 23] 
+      day   = "Friday"
+      hours = [20, 21, 22, 23]
     }
     allowed {
-      day               = "Sunday"
-      hours             = [1, 2, 3, 4, 5] 
+      day   = "Sunday"
+      hours = [1, 2, 3, 4, 5]
     }
   }
 
   auto_scaler_profile {
-    max_unready_nodes   = "1"
+    max_unready_nodes = "1"
   }
-  
+
   workload_autoscaler_profile {
-    keda_enabled        = true
+    keda_enabled = true
   }
 
   storage_profile {
@@ -102,7 +105,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   oms_agent {
-    log_analytics_workspace_id      = azurerm_log_analytics_workspace.this.id
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.this.id
     //msi_auth_for_monitoring_enabled = true
   }
 

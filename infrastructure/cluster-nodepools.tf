@@ -10,7 +10,6 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   name                  = "apps"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.this.id
   vnet_subnet_id        = azurerm_subnet.nodes.id
-  pod_subnet_id         = azurerm_subnet.pods.id
   vm_size               = "Standard_B4ms"
   enable_auto_scaling   = true
   mode                  = "User"
@@ -41,7 +40,6 @@ resource "azurerm_kubernetes_cluster_node_pool" "istio_node_pool" {
   name                  = "istio"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.this.id
   vnet_subnet_id        = azurerm_subnet.nodes.id
-  pod_subnet_id         = azurerm_subnet.pods.id
   vm_size               = "Standard_B4ms"
   enable_auto_scaling   = true
   mode                  = "User"

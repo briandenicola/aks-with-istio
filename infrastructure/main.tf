@@ -20,12 +20,17 @@ resource "random_password" "password" {
 }
 
 resource "random_integer" "vnet_cidr" {
-  min = 10
+  min = 25
   max = 250
 }
 
 resource "random_integer" "services_cidr" {
   min = 64
+  max = 99
+}
+
+resource "random_integer" "pod_cidr" {
+  min = 100
   max = 127
 }
 
@@ -39,8 +44,8 @@ locals {
   istio_gw_path         = "./clusters/common/istio/gateway"
   flux_repository       = "https://github.com/briandenicola/aks-flux-extension"
   vnet_cidr             = cidrsubnet("10.0.0.0/8", 8, random_integer.vnet_cidr.result)
+  api_subnet_cidir      = cidrsubnet(local.vnet_cidr, 8, 1)
   nodes_subnet_cidir    = cidrsubnet(local.vnet_cidr, 8, 2)
-  pods_subnet_cidir     = cidrsubnet(local.vnet_cidr, 7, 2)
 }
 
 resource "azurerm_resource_group" "this" {
