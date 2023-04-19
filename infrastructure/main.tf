@@ -44,7 +44,7 @@ locals {
   istio_gw_path         = "./clusters/common/istio/gateway"
   flux_repository       = "https://github.com/briandenicola/aks-flux-extension"
   vnet_cidr             = cidrsubnet("10.0.0.0/8", 8, random_integer.vnet_cidr.result)
-  api_subnet_cidir      = cidrsubnet(local.vnet_cidr, 8, 1)
+  api_subnet_cidir      = cidrsubnet(local.vnet_cidr, 12, 1)
   nodes_subnet_cidir    = cidrsubnet(local.vnet_cidr, 8, 2)
 }
 
