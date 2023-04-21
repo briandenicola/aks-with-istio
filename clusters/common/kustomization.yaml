@@ -5,4 +5,4 @@ resources:
   - kubecost.yaml
   - knative.yaml
   - kured.yaml
-  - dapr.yaml
+  #- dapr.yaml
