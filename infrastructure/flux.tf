@@ -1,25 +1,17 @@
-resource "azapi_resource" "flux_install" {
+resource "azurerm_kubernetes_cluster_extension" "flux" {
   depends_on = [
-    azapi_update_resource.this,
+    azapi_update_resource.post-configs,
     azurerm_kubernetes_cluster_node_pool.app_node_pool,
     azurerm_kubernetes_cluster_node_pool.istio_node_pool
   ]
-
-  type      = "Microsoft.KubernetesConfiguration/extensions@2022-11-01"
-  name      = "flux"
-  parent_id = azurerm_kubernetes_cluster.this.id
-
-  body = jsonencode({
-    properties = {
-      extensionType           = "microsoft.flux"
-      autoUpgradeMinorVersion = true
-    }
-  })
+  name           = "flux"
+  cluster_id     = azurerm_kubernetes_cluster.this.id
+  extension_type = "microsoft.flux"
 }
 
 resource "azapi_resource" "flux_config" {
   depends_on = [
-    azapi_resource.flux_install
+    azurerm_kubernetes_cluster_extension.flux
   ]
 
   type      = "Microsoft.KubernetesConfiguration/fluxConfigurations@2022-11-01"
