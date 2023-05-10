@@ -1,6 +1,6 @@
 resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   depends_on = [
-    azurerm_kubernetes_cluster.this
+    azapi_update_resource.post-configs
   ]
   lifecycle {
     ignore_changes = [
@@ -14,7 +14,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   enable_auto_scaling   = true
   mode                  = "User"
   os_sku                = "CBLMariner"
-  os_disk_size_gb       = 30
+  os_disk_size_gb       = 60
   node_count            = 3
   min_count             = 3
   max_count             = 6
@@ -28,7 +28,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
 
 resource "azurerm_kubernetes_cluster_node_pool" "istio_node_pool" {
   depends_on = [
-    azurerm_kubernetes_cluster.this
+    azapi_update_resource.post-configs
   ]
 
   lifecycle {
@@ -44,7 +44,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "istio_node_pool" {
   enable_auto_scaling   = true
   mode                  = "User"
   os_sku                = "CBLMariner"
-  os_disk_size_gb       = 30
+  os_disk_size_gb       = 60
   node_count            = 1
   min_count             = 1
   max_count             = 3

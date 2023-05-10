@@ -21,9 +21,9 @@ resource "azapi_resource" "maintenance_window" {
   })
 }
 
-resource "azapi_update_resource" "this" {
+resource "azapi_update_resource" "post-configs" {
   depends_on = [
-    azurerm_kubernetes_cluster.this
+    azapi_resource.maintenance_window
   ]
 
   type        = "Microsoft.ContainerService/managedClusters@2023-03-02-preview"
