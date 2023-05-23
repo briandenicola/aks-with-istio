@@ -1,11 +1,35 @@
 # Overview
 
-This repository is an example on how to integrate AKS with the Fluxv2 extension using terraform.  Currently, terraform does not have a resource for the AKS Flux extension.  This example uses the new _azapi_resource_ resource to configure the extension
+This repository is covers how to stand up a public (but secure) AKS/Kubernetes cluster with Istio. This code is an opiniated method of applying the standards into an end to end solution using Terraform, Flux and Istio configuration.
 
-Sample [Flux](./Flux.md) commands 
+## Cluster Design 
+* 3 - node pools with CBLMariner Node OS
+    * One system node pool
+    * One user node pool for Istio ingress gateway
+    * One node pool for applications 
+* [Azure CNI Overlay](https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay) network with [Cilium Dataplane](https://learn.microsoft.com/en-us/azure/aks/azure-cni-powered-by-cilium)
+* Cluster Identity - User Managed Identity
+* Kubelet Identity - User Managed Identity
+* [Node Image OS Updater](https://learn.microsoft.com/en-us/azure/aks/node-image-upgrade)
+* [Maintenace Schedule Setup](https://learn.microsoft.com/en-us/azure/aks/planned-maintenance) for weekly updates
 
-# Prerequisites or Use DevContainer
-* Azure subscription
+### Diagram
+![architecture](./assets/architecture.png)
+
+## Cluster Extensions
+* Flux
+* Dapr
+* KEDA
+
+## Extensions Added by Flux
+* Istio
+* Knative
+* KubeCost 
+* Kured
+
+# Prerequisites 
+_Use DevContainer with Github Codespaces_
+* Azure subscription with Owner access permissions
 * [Azure Cli](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 * [Terraform](https://developer.hashicorp.com/terraform/downloads)
 * [flux](https://fluxcd.io/flux/installation/)
@@ -16,6 +40,7 @@ Sample [Flux](./Flux.md) commands
 az login 
 task up 
 ```
+> **_NOTE:_** [zipkin](https://github.com/briandenicola/aks-with-istio/blob/main/clusters/common/istio/configuration/zipkin.yaml#L102) will need to be updated with App Insights workspace ID
 
 ## Deployment - Alternate Region
 ```bash
