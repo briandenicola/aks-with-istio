@@ -33,7 +33,7 @@ resource "azapi_update_resource" "post-configs" {
     properties = {
       autoUpgradeProfile = {
         nodeOSUpgradeChannel = "NodeImage"
-      }
+      } 
     }
   })
 }
