@@ -76,7 +76,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     network_plugin_mode = "Overlay"
     network_policy      = "azure"
     load_balancer_sku   = "standard"
-    #ebpf_data_plane     = "cilium" #https://github.com/istio/istio/issues/27619
+    ebpf_data_plane     = "cilium" #https://github.com/istio/istio/issues/27619
   }
 
   maintenance_window {
