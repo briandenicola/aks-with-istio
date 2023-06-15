@@ -33,7 +33,7 @@ spec:
   http:
   - route:
     - destination:
-        host: ingress-svc
+        host: default-backend-svc
         port:
           number: 80
   
