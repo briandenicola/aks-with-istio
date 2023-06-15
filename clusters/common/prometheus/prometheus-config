@@ -2,6 +2,26 @@ global:
   scrape_interval: 15s
   
 scrape_configs:
+
+  - job_name: "azure-npm-node-metrics-from-pod-config"
+
+    metrics_path: /node-metrics
+  
+    kubernetes_sd_configs:
+    - role: pod
+  
+    relabel_configs:
+    - source_labels: [__meta_kubernetes_namespace]
+      regex: kube-system
+      action: keep
+    - source_labels: [__meta_kubernetes_pod_annotationpresent_azure_Network Policy Manager_scrapeable]
+      action: keep
+    - source_labels: [__address__]
+      action: replace
+      regex: ([^:]+)(?::\d+)?
+      replacement: "$1:10091"
+      target_label: __address__
+
   - job_name: 'kubernetes-pods'
 
     kubernetes_sd_configs:
