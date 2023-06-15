@@ -42,8 +42,6 @@ kind: Service
 metadata:
   name: default-backend-svc
   namespace: istio-gateway
-  labels:
-    version: "1.0"
 spec:
   selector:
     app: default-ingress-backend

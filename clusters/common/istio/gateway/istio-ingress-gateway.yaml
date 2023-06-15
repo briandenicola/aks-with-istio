@@ -29,7 +29,7 @@ spec:
   hosts:
   -  istio-default.bjdazure.tech
   gateways:
-  -  default-bjdazure-tech-gw
+  -  istio-gateway/default-bjdazure-tech-gw
   http:
   - route:
     - destination:
