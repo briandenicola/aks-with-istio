@@ -81,7 +81,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     network_plugin      = "azure"
     network_plugin_mode = "overlay"
     load_balancer_sku   = "standard"
-    ebpf_data_plane     = "cilium" #Be aware of https://github.com/istio/istio/issues/27619
+    ebpf_data_plane     = "cilium" #There is a known issue with Cilium and Istio (https://github.com/istio/istio/issues/27619) when kubeproxy set to strict. Fixed and resolution are close 
   }
 
   maintenance_window {
@@ -139,8 +139,13 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   monitor_metrics {
   }
+<<<<<<< HEAD
   
   key_vault_secrets_provider {
     secret_rotation_enabled = true
   }
 }
+=======
+
+}
+>>>>>>> 23ba173abc893346698078b102aa287d12a5649c
