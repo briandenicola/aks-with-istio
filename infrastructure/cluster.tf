@@ -139,13 +139,9 @@ resource "azurerm_kubernetes_cluster" "this" {
 
   monitor_metrics {
   }
-<<<<<<< HEAD
   
   key_vault_secrets_provider {
     secret_rotation_enabled = true
   }
-}
-=======
 
 }
->>>>>>> 23ba173abc893346698078b102aa287d12a5649c
