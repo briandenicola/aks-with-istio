@@ -4,11 +4,32 @@ tasks:
   up:
     desc: Builds end to end an AKS environment
     cmds:
+    - task: init
+    - task: apply
+    - task: creds
+    vars:
+      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+
+  init: 
+    desc: Initializes Terraform
+    cmds:
     - terraform -chdir=./infrastructure workspace new {{.REGION}} || true
     - terraform -chdir=./infrastructure workspace select {{.REGION}}
     - terraform -chdir=./infrastructure init
+    vars:
+      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+
+  apply: 
+    desc: Applies Terraform configuration
+    cmds:
     - terraform -chdir=./infrastructure apply -auto-approve -var "region={{.REGION}}"
-    - task: creds
+    vars:
+      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+
+  plan:
+    desc: Reviews Terraform plan
+    cmds:
+    - terraform -chdir=./infrastructure plan -var "region={{.REGION}}"
     vars:
       REGION: '{{default "southcentralus" .CLI_ARGS}}'
     
@@ -26,7 +47,11 @@ tasks:
   validate: 
     desc: Shows all pods and services deployed in the cluster
     cmds:
-    - kubectl get pods,services,deployments
+    - kubectl -n istio-gateway get pods,services,deployments
+    - kubectl -n istio-system get pods,services,deployments
+    - kubectl -n knative-serving get pods,services,deployments
+    - kubectl -n apps get pods,services,deployments
+    - kubectl -n bookstore get pods,services,deployments
     - flux get all
 
   down:
