@@ -62,7 +62,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     vm_size             = "Standard_DS2_v2"
     os_disk_size_gb     = 60
     vnet_subnet_id      = azurerm_subnet.nodes.id
-    os_sku              = "CBLMariner"
+    os_sku              = "Mariner"
     os_disk_type        = "Ephemeral"
     type                = "VirtualMachineScaleSets"
     enable_auto_scaling = true
