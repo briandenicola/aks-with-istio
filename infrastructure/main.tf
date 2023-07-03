@@ -14,11 +14,6 @@ resource "random_pet" "this" {
   separator = ""
 }
 
-resource "random_password" "password" {
-  length  = 25
-  special = true
-}
-
 resource "random_integer" "vnet_cidr" {
   min = 25
   max = 250
@@ -42,7 +37,7 @@ locals {
   crd_path              = "./clusters/common/customresourcedefinitions"
   istio_cfg_path        = "./clusters/common/istio/configuration"
   istio_gw_path         = "./clusters/common/istio/gateway"
-  flux_repository       = "https://github.com/briandenicola/aks-flux-extension"
+  flux_repository       = "https://github.com/briandenicola/aks-with-istio"
   vnet_cidr             = cidrsubnet("10.0.0.0/8", 8, random_integer.vnet_cidr.result)
   api_subnet_cidir      = cidrsubnet(local.vnet_cidr, 12, 1)
   nodes_subnet_cidir    = cidrsubnet(local.vnet_cidr, 8, 2)
