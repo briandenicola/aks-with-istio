@@ -81,7 +81,8 @@ resource "azurerm_kubernetes_cluster" "this" {
     network_plugin      = "azure"
     network_plugin_mode = "overlay"
     load_balancer_sku   = "standard"
-    ebpf_data_plane     = "cilium" #There is a known issue with Cilium and Istio (https://github.com/istio/istio/issues/27619) when kubeproxy set to strict. Fixed and resolution are close 
+    network_policy      = "calico"
+    #ebpf_data_plane     = "cilium" #There is a known issue with Cilium and AKS Managed Istio (https://github.com/istio/istio/issues/27619)
   }
 
   maintenance_window {
@@ -134,7 +135,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   microsoft_defender {
-    log_analytics_workspace_id = azurerm_log_analytics_workspace.this.id
+    log_analytics_workspace_id      = azurerm_log_analytics_workspace.this.id
   }
 
   monitor_metrics {
@@ -145,7 +146,6 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   service_mesh_profile {
-    mode = "Istio"
+    mode = "Istio" 
   }
-
 }

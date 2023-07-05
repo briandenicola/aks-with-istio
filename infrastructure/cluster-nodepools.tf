@@ -1,7 +1,7 @@
 resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   depends_on = [
-  #  azapi_update_resource.post-configs
-    azurerm_kubernetes_cluster.this
+    azapi_update_resource.istio_ingressgateway
+  #  azurerm_kubernetes_cluster.this
   ]
   lifecycle {
     ignore_changes = [
@@ -27,33 +27,33 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   node_taints = ["reservedFor=apps:NoSchedule"]
 }
 
-resource "azurerm_kubernetes_cluster_node_pool" "istio_node_pool" {
-  depends_on = [
-  #  azapi_update_resource.post-configs
-    azurerm_kubernetes_cluster.this
-  ]
+# resource "azurerm_kubernetes_cluster_node_pool" "istio_node_pool" {
+#   depends_on = [
+#     azapi_update_resource.post-configs
+#   #  azurerm_kubernetes_cluster.this
+#   ]
 
-  lifecycle {
-    ignore_changes = [
-      node_count
-    ]
-  }
+#   lifecycle {
+#     ignore_changes = [
+#       node_count
+#     ]
+#   }
 
-  name                  = "istio"
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.this.id
-  vnet_subnet_id        = azurerm_subnet.nodes.id
-  vm_size               = "Standard_B4ms"
-  enable_auto_scaling   = true
-  mode                  = "User"
-  os_sku                = "Mariner"
-  os_disk_size_gb       = 60
-  node_count            = 1
-  min_count             = 1
-  max_count             = 3
+#   name                  = "istio"
+#   kubernetes_cluster_id = azurerm_kubernetes_cluster.this.id
+#   vnet_subnet_id        = azurerm_subnet.nodes.id
+#   vm_size               = "Standard_B4ms"
+#   enable_auto_scaling   = true
+#   mode                  = "User"
+#   os_sku                = "Mariner"
+#   os_disk_size_gb       = 60
+#   node_count            = 1
+#   min_count             = 1
+#   max_count             = 3
 
-  upgrade_settings {
-    max_surge           = "25%"
-  }
+#   upgrade_settings {
+#     max_surge           = "25%"
+#   }
 
-  node_taints = ["reservedFor=istio-gateway:NoSchedule"]
-}
+#   node_taints = ["reservedFor=istio-gateway:NoSchedule"]
+# }

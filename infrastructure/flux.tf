@@ -1,7 +1,7 @@
 resource "azurerm_kubernetes_cluster_extension" "flux" {
   depends_on = [
     azurerm_kubernetes_cluster_node_pool.app_node_pool,
-    azurerm_kubernetes_cluster_node_pool.istio_node_pool
+    //azurerm_kubernetes_cluster_node_pool.istio_node_pool
   ]
   name           = "flux"
   cluster_id     = azurerm_kubernetes_cluster.this.id
