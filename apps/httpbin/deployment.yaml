@@ -94,7 +94,7 @@ spec:
   hosts:
   -  httpbin.bjdazure.tech
   gateways:
-  -  istio-gateway/default-bjdazure-tech-gw
+  -  istio-gateways/default-bjdazure-tech-gw
   http:
   - route:
     - destination:

@@ -1,8 +1,16 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: istio-gateways
+  labels:
+    istio-operator-managed: Reconcile
+    istio.io/rev: asm-1-17
+---
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
   name: default-bjdazure-tech-gw
-  namespace: istio-gateway
+  namespace: istio-gateways
 spec:
   selector:
     istio: ingressgateway 
@@ -24,12 +32,12 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name:  default-bjdazure-tech-vs
-  namespace: istio-gateway
+  namespace: istio-gateways
 spec:
   hosts:
   -  istio-default.bjdazure.tech
   gateways:
-  -  istio-gateway/default-bjdazure-tech-gw
+  -  istio-gateways/default-bjdazure-tech-gw
   http:
   - route:
     - destination:
