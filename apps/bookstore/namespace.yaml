@@ -4,7 +4,6 @@ kind: Namespace
 metadata:
   name: bookstore
   labels:
-    istio-injection: enabled
     istio.io/rev: asm-1-17
   annotations:
     scheduler.alpha.kubernetes.io/defaultTolerations: '[{"key": "reservedFor", "operator": "Equal", "effect": "NoSchedule", "value": "apps"}]'

@@ -3,7 +3,6 @@ kind: Namespace
 metadata:
   name: otel-system
   labels:
-    istio-injection: enabled
     istio.io/rev: asm-1-17
 ---
 apiVersion: v1
