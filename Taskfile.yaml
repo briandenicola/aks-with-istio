@@ -7,6 +7,7 @@ tasks:
     - task: init
     - task: apply
     - task: creds
+    - task: appinsights
     vars:
       REGION: '{{default "southcentralus" .CLI_ARGS}}'
 
@@ -43,6 +44,18 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP
       AKS: 
         sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
+
+  appinsights:
+    desc: Update Zipkin confiuration with proper AI Key
+    cmds:
+    - export AI_INSTRUMENTATION_KEY={{.AI_INSTRUMENTATION_KEY}} ;
+      envsubst < clusters/common/istio/configuration/zipkin.tmpl > clusters/common/istio/configuration/zipkin.yaml
+    - git add clusters/common/istio/configuration/zipkin.yaml
+    - git commit -m "Updated AI_INSTRUMENTATION_KEY value"
+    - git push
+    vars:
+      AI_INSTRUMENTATION_KEY: 
+        sh: terraform -chdir=./infrastructure output -raw AI_INSTRUMENTATION_KEY
 
   validate: 
     desc: Shows all pods and services deployed in the cluster

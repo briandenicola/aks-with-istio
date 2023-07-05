@@ -144,4 +144,8 @@ resource "azurerm_kubernetes_cluster" "this" {
     secret_rotation_enabled = true
   }
 
+  service_mesh_profile {
+    mode = "Istio"
+  }
+
 }
