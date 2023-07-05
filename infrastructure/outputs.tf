@@ -10,5 +10,5 @@ output "AKS_CLUSTER_NAME" {
 
 output "AI_INSTRUMENTATION_KEY" {
     value = azurerm_application_insights.this.instrumentation_key
-    sensitive = false
+    sensitive = true
 }
