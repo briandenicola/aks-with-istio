@@ -3,7 +3,6 @@ kind: Namespace
 metadata:
   name: apps
   labels:
-    istio-injection: enabled
     istio.io/rev: asm-1-17
     pod-security.kubernetes.io/enforce: baseline
     pod-security.kubernetes.io/enforce-version: v1.25
@@ -49,7 +48,9 @@ spec:
         securityContext:
           runAsNonRoot: true
           readOnlyRootFilesystem: true
-          allowPrivilegeEscalation: false  
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
         ports:
         - containerPort: 8080
         resources:
