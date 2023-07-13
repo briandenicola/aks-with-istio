@@ -57,10 +57,10 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   default_node_pool {
-    name                = "default"
+    name                = "system"
     node_count          = 3
-    vm_size             = "Standard_DS2_v2"
-    os_disk_size_gb     = 60
+    vm_size             = var.vm_sku
+    os_disk_size_gb     = 100
     vnet_subnet_id      = azurerm_subnet.nodes.id
     os_sku              = "Mariner"
     os_disk_type        = "Ephemeral"
