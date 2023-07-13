@@ -16,7 +16,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   mode                  = "User"
   os_sku                = "Mariner"
   os_disk_type          = "Ephemeral"
-  os_disk_size_gb       = 60
+  os_disk_size_gb       = 30
   node_count            = 3
   min_count             = 3
   max_count             = 6
@@ -48,7 +48,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
 #   mode                  = "User"
 #   os_sku                = "Mariner"
 #   os_disk_type          = "Ephemeral"
-#   os_disk_size_gb       = 60
+#   os_disk_size_gb       = 30
 #   node_count            = 1
 #   min_count             = 1
 #   max_count             = 3
