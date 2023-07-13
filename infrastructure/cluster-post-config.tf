@@ -8,6 +8,11 @@ resource "azapi_update_resource" "istio_ingressgateway" {
 
   body = jsonencode({
     properties = {
+      networkProfile = {
+        monitoring = {
+          enabled = true
+        }
+      }
       serviceMeshProfile ={
         istio = {
           components = {
@@ -21,3 +26,5 @@ resource "azapi_update_resource" "istio_ingressgateway" {
     }
   })
 }
+
+#https://grafana.com/grafana/dashboards/18814-kubernetes-networking/
