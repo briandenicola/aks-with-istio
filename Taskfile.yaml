@@ -60,11 +60,13 @@ tasks:
   validate: 
     desc: Shows all pods and services deployed in the cluster
     cmds:
-    - kubectl -n istio-gateway get pods,services,deployments
-    - kubectl -n istio-system get pods,services,deployments
+    - kubectl -n istio-gateways get pods,services,deployments
+    - kubectl -n aks-istio-ingress get pods,services,deployments
+    - kubectl -n aks-istio-system get pods,services,deployments
     - kubectl -n knative-serving get pods,services,deployments
     - kubectl -n apps get pods,services,deployments
     - kubectl -n bookstore get pods,services,deployments
+    - kubectl -n kube-system get pods,services,deployments
     - flux get all
 
   down:
