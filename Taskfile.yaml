@@ -57,7 +57,7 @@ tasks:
       AI_INSTRUMENTATION_KEY: 
         sh: terraform -chdir=./infrastructure output -raw AI_INSTRUMENTATION_KEY
 
-  validate: 
+  pods: 
     desc: Shows all pods and services deployed in the cluster
     cmds:
     - kubectl -n istio-gateways get pods,services,deployments
@@ -68,6 +68,20 @@ tasks:
     - kubectl -n bookstore get pods,services,deployments
     - kubectl -n kube-system get pods,services,deployments
     - flux get all
+
+  cluster:
+    desc: Shows status of the AKS cluster
+    cmds:
+    - kubectl config use-context {{.AKS}}
+    - az aks show -n tiger-8576-aks -g tiger-8576_rg -o table
+    - az aks nodepool list --cluster-name {{.AKS}} -g {{.RG}} -o table
+    - kubectl get nodes -o wide -L kubernetes.azure.com/node-image-version
+    - kubectl get --raw='/readyz?verbose'
+    vars:
+      RG: 
+        sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP
+      AKS: 
+        sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
 
   down:
     desc: Destroys all Azure resources and cleans up terraform
