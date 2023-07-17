@@ -68,7 +68,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     enable_auto_scaling = true
     min_count           = 3
     max_count           = 9
-    max_pods            = 40
+    max_pods            = 60
     upgrade_settings {
       max_surge = "33%"
     }
