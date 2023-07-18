@@ -13,18 +13,9 @@ resource "azapi_update_resource" "istio_ingressgateway" {
           enabled = true
         }
       }
-      serviceMeshProfile ={
-        istio = {
-          components = {
-            ingressGateways = [{
-              enabled = true,
-              mode    = "Internal"
-            }]
-          }
-        },
-      }
     }
   })
 }
 
 #https://grafana.com/grafana/dashboards/18814-kubernetes-networking/
+#https://grafana.com/grafana/dashboards/16611-cilium-metrics/
