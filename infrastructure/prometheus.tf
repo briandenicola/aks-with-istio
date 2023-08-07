@@ -14,7 +14,7 @@ locals {
 }
 
 resource "azurerm_monitor_data_collection_endpoint" "this" {
-  name                          = "${local.resource_name}-azuremonitor-datacollection-ep"
+  name                          = "${local.resource_name}-ama-datacollection-ep"
   resource_group_name           = azurerm_resource_group.this.name
   location                      = azurerm_resource_group.this.location
   kind                          = "Linux"
@@ -22,7 +22,7 @@ resource "azurerm_monitor_data_collection_endpoint" "this" {
 }
 
 resource "azurerm_monitor_data_collection_rule" "azuremonitor" {
-  name                = "${local.resource_name}-azuremonitor-datacollection-rules"
+  name                = "${local.resource_name}-ama-datacollection-rules"
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
   depends_on = [
@@ -35,12 +35,12 @@ resource "azurerm_monitor_data_collection_rule" "azuremonitor" {
   destinations {
     monitor_account {
       monitor_account_id = local.am_workspace_id
-      name               = "MonitoringAccount1"
+      name               = "MonitoringAccount"
     }
   }
 
   data_flow {
-    destinations = ["MonitoringAccount1"]
+    destinations = ["MonitoringAccount"]
     streams      = ["Microsoft-PrometheusMetrics"]
   }
 
@@ -54,7 +54,7 @@ resource "azurerm_monitor_data_collection_rule" "azuremonitor" {
 
 resource "azapi_resource" "monitor_datacollection_rule_associations" {
   type = "Microsoft.Insights/dataCollectionRuleAssociations@2021-09-01-preview"
-  name = "${local.resource_name}-monitor-datacollection-rules-association"
+  name = "${local.resource_name}-ama-datacollection-rules-association"
   parent_id = azurerm_kubernetes_cluster.this.id
   body = jsonencode({
     properties = {

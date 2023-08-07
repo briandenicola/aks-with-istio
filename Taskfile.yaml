@@ -4,11 +4,33 @@ tasks:
   up:
     desc: Builds end to end an AKS environment
     cmds:
+    - task: init
+    - task: apply
+    - task: creds
+    - task: appinsights
+    vars:
+      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+
+  init: 
+    desc: Initializes Terraform
+    cmds:
     - terraform -chdir=./infrastructure workspace new {{.REGION}} || true
     - terraform -chdir=./infrastructure workspace select {{.REGION}}
     - terraform -chdir=./infrastructure init
+    vars:
+      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+
+  apply: 
+    desc: Applies Terraform configuration
+    cmds:
     - terraform -chdir=./infrastructure apply -auto-approve -var "region={{.REGION}}"
-    - task: creds
+    vars:
+      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+
+  plan:
+    desc: Reviews Terraform plan
+    cmds:
+    - terraform -chdir=./infrastructure plan -var "region={{.REGION}}"
     vars:
       REGION: '{{default "southcentralus" .CLI_ARGS}}'
     
@@ -23,11 +45,43 @@ tasks:
       AKS: 
         sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
 
-  validate: 
+  appinsights:
+    desc: Update Zipkin confiuration with proper AI Key
+    cmds:
+    - export AI_INSTRUMENTATION_KEY={{.AI_INSTRUMENTATION_KEY}} ;
+      envsubst < clusters/common/istio/configuration/zipkin.tmpl > clusters/common/istio/configuration/zipkin.yaml
+    - git add clusters/common/istio/configuration/zipkin.yaml
+    - git commit -m "Updated AI_INSTRUMENTATION_KEY value"
+    - git push
+    vars:
+      AI_INSTRUMENTATION_KEY: 
+        sh: terraform -chdir=./infrastructure output -raw AI_INSTRUMENTATION_KEY
+
+  pods: 
     desc: Shows all pods and services deployed in the cluster
     cmds:
-    - kubectl get pods,services,deployments
+    - kubectl -n istio-gateways get pods,services,deployments
+    - kubectl -n aks-istio-ingress get pods,services,deployments
+    - kubectl -n aks-istio-system get pods,services,deployments
+    - kubectl -n knative-serving get pods,services,deployments
+    - kubectl -n apps get pods,services,deployments
+    - kubectl -n bookstore get pods,services,deployments
+    - kubectl -n kube-system get pods,services,deployments
     - flux get all
+
+  cluster:
+    desc: Shows status of the AKS cluster
+    cmds:
+    - kubectl config use-context {{.AKS}}
+    - az aks show -n tiger-8576-aks -g tiger-8576_rg -o table
+    - az aks nodepool list --cluster-name {{.AKS}} -g {{.RG}} -o table
+    - kubectl get nodes -o wide -L kubernetes.azure.com/node-image-version
+    - kubectl get --raw='/readyz?verbose'
+    vars:
+      RG: 
+        sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP
+      AKS: 
+        sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
 
   down:
     desc: Destroys all Azure resources and cleans up terraform

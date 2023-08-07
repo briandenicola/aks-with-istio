@@ -2,6 +2,11 @@ data "azurerm_kubernetes_service_versions" "current" {
   location = azurerm_resource_group.this.location
 }
 
+locals {
+  kubernetes_version = data.azurerm_kubernetes_service_versions.current.versions[length(data.azurerm_kubernetes_service_versions.current.versions) - 2]
+  allowed_ip_range   = ["${chomp(data.http.myip.response_body)}/32"]
+}
+
 resource "azurerm_kubernetes_cluster" "this" {
   lifecycle {
     ignore_changes = [
@@ -16,27 +21,27 @@ resource "azurerm_kubernetes_cluster" "this" {
   dns_prefix                   = local.aks_name
   sku_tier                     = "Standard"
   automatic_channel_upgrade    = "patch"
+  node_os_channel_upgrade      = "NodeImage"
   oidc_issuer_enabled          = true
   workload_identity_enabled    = true
   azure_policy_enabled         = true
   local_account_disabled       = true
   open_service_mesh_enabled    = false
   run_command_enabled          = false
-  kubernetes_version           = data.azurerm_kubernetes_service_versions.current.versions[length(data.azurerm_kubernetes_service_versions.current.versions) - 2]
+  kubernetes_version           = local.kubernetes_version
   image_cleaner_enabled        = true
   image_cleaner_interval_hours = 48
 
   api_server_access_profile {
     vnet_integration_enabled = true
     subnet_id                = azurerm_subnet.api.id
-    authorized_ip_ranges     = ["${chomp(data.http.myip.response_body)}/32"]
+    authorized_ip_ranges     = local.allowed_ip_range
   }
 
   azure_active_directory_role_based_access_control {
     managed                = true
     azure_rbac_enabled     = true
     tenant_id              = data.azurerm_client_config.current.tenant_id
-
   }
 
   identity {
@@ -51,18 +56,18 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   default_node_pool {
-    name                = "default"
+    name                = "system"
     node_count          = 3
-    vm_size             = "Standard_DS2_v2"
-    os_disk_size_gb     = 60
+    vm_size             = var.vm_sku
+    os_disk_size_gb     = 100
     vnet_subnet_id      = azurerm_subnet.nodes.id
-    os_sku              = "CBLMariner"
+    os_sku              = "Mariner"
     os_disk_type        = "Ephemeral"
     type                = "VirtualMachineScaleSets"
     enable_auto_scaling = true
     min_count           = 3
     max_count           = 9
-    max_pods            = 40
+    max_pods            = 60
     upgrade_settings {
       max_surge = "33%"
     }
@@ -73,21 +78,28 @@ resource "azurerm_kubernetes_cluster" "this" {
     service_cidr        = "100.${random_integer.services_cidr.id}.0.0/16"
     pod_cidr            = "100.${random_integer.pod_cidr.id}.0.0/16"
     network_plugin      = "azure"
-    network_plugin_mode = "Overlay"
-    #network_policy      = "azure"
+    network_plugin_mode = "overlay"
     load_balancer_sku   = "standard"
-    ebpf_data_plane     = "cilium"
+    network_policy      = "calico"
+    #ebpf_data_plane     = "cilium" #There is a known issue with Cilium and AKS Managed Istio (https://github.com/istio/istio/issues/27619)
   }
 
-  maintenance_window {
-    allowed {
-      day   = "Friday"
-      hours = [20, 21, 22, 23]
-    }
-    allowed {
-      day   = "Sunday"
-      hours = [1, 2, 3, 4, 5]
-    }
+  maintenance_window_auto_upgrade {
+    frequency = "Weekly"
+    interval  = 1
+    duration  = 4
+    day_of_week = "Friday"
+    utc_offset = "-06:00"
+    start_time = "20:00"
+  }
+
+  maintenance_window_node_os {
+    frequency = "Weekly"
+    interval  = 1
+    duration  = 4
+    day_of_week = "Saturday"
+    utc_offset = "-06:00"
+    start_time = "20:00"
   }
 
   auto_scaler_profile {
@@ -106,15 +118,23 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   oms_agent {
-    log_analytics_workspace_id = azurerm_log_analytics_workspace.this.id
+    log_analytics_workspace_id      = azurerm_log_analytics_workspace.this.id
     msi_auth_for_monitoring_enabled = true
   }
 
   microsoft_defender {
-    log_analytics_workspace_id = azurerm_log_analytics_workspace.this.id
+    log_analytics_workspace_id      = azurerm_log_analytics_workspace.this.id
   }
 
   monitor_metrics {
   }
+  
+  key_vault_secrets_provider {
+    secret_rotation_enabled = true
+  }
 
+  service_mesh_profile {
+    mode                             = "Istio" 
+    internal_ingress_gateway_enabled = true
+  }
 }

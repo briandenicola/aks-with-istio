@@ -4,7 +4,7 @@ resource "azurerm_log_analytics_workspace" "this" {
   resource_group_name           = azurerm_resource_group.this.name
   local_authentication_disabled = true
   sku                           = "PerGB2018"
-  daily_quota_gb                = 0.5
+  daily_quota_gb                = 10
 }
 
 resource "azurerm_log_analytics_solution" "this" {

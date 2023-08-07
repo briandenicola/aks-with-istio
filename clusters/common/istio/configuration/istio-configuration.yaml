@@ -1,89 +1,25 @@
----
+kind: ConfigMap
 apiVersion: v1
-kind: Namespace
 metadata:
-  name: istio-system
-  labels:
-    istio-operator-managed: Reconcile
-    istio-injection: disabled
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: istio-gateway
-  labels:
-    istio-operator-managed: Reconcile
-    istio-injection: enabled
-  annotations:
-    scheduler.alpha.kubernetes.io/defaultTolerations: '[{"key": "reservedFor", "operator": "Equal", "effect": "NoSchedule", "value": "istio-gateway"}]'
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: default
-  labels:
-    istio-injection: enabled
----
-apiVersion: install.istio.io/v1alpha1
-kind: IstioOperator
-metadata:
-  namespace: istio-system
-  name: istio-controlplane
-spec:
-  profile: default
-  meshConfig:
+  name:  istio-asm-1-17
+  namespace: aks-istio-system
+data:
+  mesh: |-
+    defaultConfig:
+      discoveryAddress: istiod-asm-1-17.aks-istio-system.svc:15012
+      gatewayTopology:
+        numTrustedProxies: 1
+      image:
+        imageType: distroless
+      tracing:
+        zipkin:
+          address:  address: otel-collector.otel-system.svc.cluster.local:9411
+    enablePrometheusMerge: true
     accessLogFile: /dev/stdout
     accessLogEncoding: JSON
     enableTracing: true
-    enablePrometheusMerge: true
     outboundTrafficPolicy:
       mode: ALLOW_ANY
-    defaultConfig:
-      tracing:
-        zipkin:
-          address: otel-collector.otel-system.svc.cluster.local:9411
-  values:
-    global:
-      tracer:
-        zipkin:
-          address: otel-collector.otel-system.svc.cluster.local:9411
-  components:
-    cni:
-      enabled: true
-    pilot:
-      k8s:
-        podDisruptionBudget:
-          minAvailable: 1
-    egressGateways:
-    - name: istio-egressgateway
-      namespace: istio-gateway
-      enabled: true
-      k8s:
-        podDisruptionBudget:
-          minAvailable: 1
-        tolerations:
-        - key: "reservedFor"
-          operator: "Equal"
-          value: "istio-gateway"
-          effect: "NoSchedule"
-    ingressGateways:
-    - name: istio-ingressgateway
-      namespace: istio-gateway
-      enabled: true
-      k8s:
-        podDisruptionBudget:
-          minAvailable: 1
-        serviceAnnotations:
-          service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-        tolerations:
-        - key: "reservedFor"
-          operator: "Equal"
-          value: "istio-gateway"
-          effect: "NoSchedule"
-  addonComponents:
-    prometheus:
-      enabled: false
-    kiali:
-      enabled: false
-    grafana:
-      enabled: false
+    rootNamespace: aks-istio-system
+    trustDomain: cluster.local
+  meshNetworks: 'networks: {}'
