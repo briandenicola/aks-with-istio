@@ -81,7 +81,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     network_plugin_mode = "overlay"
     load_balancer_sku   = "standard"
     network_policy      = "calico"
-    #ebpf_data_plane     = "cilium" #There is a known issue with Cilium and AKS Managed Istio (https://github.com/istio/istio/issues/27619)
+    ebpf_data_plane     = "cilium"
   }
 
   maintenance_window_auto_upgrade {
