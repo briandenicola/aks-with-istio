@@ -30,11 +30,14 @@ This repository is covers how to stand up a public (but secure) AKS/Kubernetes c
 # Prerequisites 
 _Use DevContainer with Github Codespaces_
 * Azure subscription with Owner access permissions
+* [AKS Preview Features](https://github.com/briandenicola/kubernetes-cluster-setup/blob/main/scripts/aks-preview-features.sh)
+   * Script requires  `/usr/bin/watch` which is not part of the default bash shell on macos.
+   * Run `brew install watch` to install on macos
 * [Azure Cli](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 * [Terraform](https://developer.hashicorp.com/terraform/downloads)
 * [flux](https://fluxcd.io/flux/installation/)
 * [Taskfile](https://taskfile.dev/installation)
-
+  
 # Deployment - Default Region (South Central)
 ```bash
 az login 
