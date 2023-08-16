@@ -1,4 +1,4 @@
-resource "azapi_update_resource" "istio_ingressgateway" {
+resource "azapi_update_resource" "cluster_updates" {
   depends_on = [
     azurerm_kubernetes_cluster.this
   ]

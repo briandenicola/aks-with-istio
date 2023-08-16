@@ -1,7 +1,6 @@
 resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   depends_on = [
-    azapi_update_resource.istio_ingressgateway
-  #  azurerm_kubernetes_cluster.this
+    azapi_update_resource.cluster_updates
   ]
   lifecycle {
     ignore_changes = [
@@ -11,7 +10,9 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   name                  = "apps"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.this.id
   vnet_subnet_id        = azurerm_subnet.nodes.id
-  vm_size               = "Standard_B4ms"
+  zones                 = local.zones
+  #vm_size               = "Standard_B4ms"
+  vm_size               = var.vm_sku
   enable_auto_scaling   = true
   mode                  = "User"
   os_sku                = "Mariner"
@@ -22,7 +23,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   max_count             = 6
 
   upgrade_settings {
-    max_surge           = "25%"
+    max_surge = "25%"
   }
 
   node_taints = ["reservedFor=apps:NoSchedule"]

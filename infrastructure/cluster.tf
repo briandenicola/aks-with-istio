@@ -5,6 +5,12 @@ data "azurerm_kubernetes_service_versions" "current" {
 locals {
   kubernetes_version = data.azurerm_kubernetes_service_versions.current.versions[length(data.azurerm_kubernetes_service_versions.current.versions) - 2]
   allowed_ip_range   = ["${chomp(data.http.myip.response_body)}/32"]
+  zones              = var.region == "northcentralus" ? null : ["1", "2", "3"]
+}
+
+resource "tls_private_key" "rsa" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
 }
 
 resource "azurerm_kubernetes_cluster" "this" {
@@ -38,6 +44,14 @@ resource "azurerm_kubernetes_cluster" "this" {
     authorized_ip_ranges     = local.allowed_ip_range
   }
 
+  linux_profile {
+    admin_username = "manager"
+    ssh_key {
+      key_data = tls_private_key.rsa.public_key_openssh
+    }
+  }
+
+
   azure_active_directory_role_based_access_control {
     managed                = true
     azure_rbac_enabled     = true
@@ -59,6 +73,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     name                = "system"
     node_count          = 3
     vm_size             = var.vm_sku
+    zones               = local.zones
     os_disk_size_gb     = 100
     vnet_subnet_id      = azurerm_subnet.nodes.id
     os_sku              = "Mariner"
@@ -80,8 +95,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     network_plugin      = "azure"
     network_plugin_mode = "overlay"
     load_balancer_sku   = "standard"
-    network_policy      = "calico"
-    ebpf_data_plane     = "cilium"
+    //ebpf_data_plane     = "cilium"
   }
 
   maintenance_window_auto_upgrade {
