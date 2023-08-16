@@ -73,7 +73,7 @@ tasks:
     desc: Shows status of the AKS cluster
     cmds:
     - kubectl config use-context {{.AKS}}
-    - az aks show -n tiger-8576-aks -g tiger-8576_rg -o table
+    - az aks show -n {{.AKS}} -g {{.RG}} -o table
     - az aks nodepool list --cluster-name {{.AKS}} -g {{.RG}} -o table
     - kubectl get nodes -o wide -L kubernetes.azure.com/node-image-version
     - kubectl get --raw='/readyz?verbose'
