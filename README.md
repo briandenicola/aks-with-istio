@@ -40,7 +40,7 @@ _Use DevContainer with Github Codespaces_
 az login 
 task up 
 ```
-> **_NOTE:_** [zipkin](https://github.com/briandenicola/aks-with-istio/blob/main/clusters/common/istio/configuration/zipkin.yaml#L102) will need to be updated with App Insights workspace ID
+> **_NOTE:_** Task will automatically update [zipkin](https://github.com/briandenicola/aks-with-istio/blob/main/clusters/common/istio/configuration/zipkin.tmpl) with the proper App Insights workspace ID. Otherwise this will have be to manually updated.
 
 ## Deployment - Alternate Region
 ```bash
