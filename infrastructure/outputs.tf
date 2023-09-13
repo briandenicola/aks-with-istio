@@ -12,3 +12,11 @@ output "AI_INSTRUMENTATION_KEY" {
     value = azurerm_application_insights.this.instrumentation_key
     sensitive = true
 }
+
+output "KEYVAULT_NAME" {
+    value = azurerm_key_vault.this.name
+}
+
+output "INGRESS_CLIENT_ID" {
+    value = azurerm_user_assigned_identity.aks_service_mesh_identity.client_id
+}
