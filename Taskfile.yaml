@@ -57,7 +57,7 @@ tasks:
     - export AI_INSTRUMENTATION_KEY={{.AI_INSTRUMENTATION_KEY}} ;
       envsubst < clusters/common/istio/configuration/zipkin.tmpl > clusters/common/istio/configuration/zipkin.yaml
     - export INGRESS_CLIENT_ID={{.INGRESS_CLIENT_ID}} ;
-      envsubst < clusters/common/istio/gateway/serviceaccount.yaml.tmpl > clusters/common/istio/gateway/serviceaccount.yaml
+      envsubst < clusters/common/istio/gateway/serviceaccount.tmpl > clusters/common/istio/gateway/serviceaccount.yaml
     - export KEYVAULT_NAME={{.KEYVAULT_NAME}} ;
       export INGRESS_CLIENT_ID={{.INGRESS_CLIENT_ID}} ;
       envsubst < clusters/common/istio/gateway/secretsprovider.tmpl > clusters/common/istio/gateway/secretsprovider.yaml
