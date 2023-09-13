@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: default-backend
-  namespace: istio-gateways
+  namespace: aks-istio-ingress
 spec:
   selector:
     matchLabels:
@@ -48,7 +48,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: default-backend-svc
-  namespace: istio-gateways
+  namespace: aks-istio-ingress
 spec:
   selector:
     app: default-ingress-backend

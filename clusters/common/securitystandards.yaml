@@ -13,4 +13,4 @@ plugins:
       warn: "privileged"
       warn-version: "latest"
     exemptions:
-      namespaces: ["kube-system", "kured-system", "kubecost-system", "otel-system", "dapr-system", "knative-serving", "istio-gateways", "aks-istio-gateways", "aks-istio-system"]
+      namespaces: ["kube-system", "kured-system", "kubecost-system", "otel-system", "dapr-system", "knative-serving", "aks-istio-gateways", "aks-istio-system"]

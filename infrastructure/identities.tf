@@ -22,5 +22,5 @@ resource "azurerm_federated_identity_credential" "aks_service_mesh_identity" {
   audience            = ["api://AzureADTokenExchange"]
   issuer              = azurerm_kubernetes_cluster.this.oidc_issuer_url
   parent_id           = azurerm_user_assigned_identity.aks_service_mesh_identity.id
-  subject             = "system:serviceaccount:istio-gateways:istio-ingress-sa-identity"
+  subject             = "system:serviceaccount:aks-istio-ingress:istio-ingress-sa-identity"
 }

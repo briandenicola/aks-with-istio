@@ -78,7 +78,6 @@ tasks:
   pods: 
     desc: Shows all pods and services deployed in the cluster
     cmds:
-    - kubectl -n istio-gateways get pods,services,deployments
     - kubectl -n aks-istio-ingress get pods,services,deployments
     - kubectl -n aks-istio-system get pods,services,deployments
     - kubectl -n knative-serving get pods,services,deployments

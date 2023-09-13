@@ -172,7 +172,7 @@ task: [cluster] kubectl get --raw='/readyz?verbose'
 readyz check passed
 
 $ task pods
-task: [pods] kubectl -n istio-gateways get pods,services,deployments
+task: [pods] kubectl -n aks-istio-ingress get pods,services,deployments
 NAME                                   READY   STATUS    RESTARTS   AGE
 pod/default-backend-6f498f47dc-k4sqc   2/2     Running   0          2m53s
 
