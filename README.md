@@ -39,9 +39,13 @@ _Use DevContainer with Github Codespaces_
 * [Terraform](https://developer.hashicorp.com/terraform/downloads)
 * [flux](https://fluxcd.io/flux/installation/)
 * [Taskfile](https://taskfile.dev/installation)
+* A TLS Certificate in TLS format
   
 # Deployment - Default Region (South Central)
 ```bash
+vi .env
+  CERT_PFX_PASS=
+  CERT_PATH=
 az login 
 task up 
 ```
@@ -49,6 +53,9 @@ task up
 
 ## Deployment - Alternate Region
 ```bash
+vi .env
+  CERT_PFX_PASS=
+  CERT_PATH=
 az login 
 task up -- northcentralus
 ```

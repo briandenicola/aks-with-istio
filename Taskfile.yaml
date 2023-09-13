@@ -1,5 +1,7 @@
 version: '3'
 
+dotenv: ['.env']
+
 tasks:
   up:
     desc: Builds end to end an AKS environment
@@ -23,16 +25,20 @@ tasks:
   apply: 
     desc: Applies Terraform configuration
     cmds:
-    - terraform -chdir=./infrastructure apply -auto-approve -var "region={{.REGION}}"
+    - terraform -chdir=./infrastructure apply -auto-approve -var "region={{.REGION}}" -var "certificate_base64_encoded={{.CERT}}" -var "certificate_password={{.CERT_PFX_PASS}}"
     vars:
       REGION: '{{default "southcentralus" .CLI_ARGS}}'
+      CERT:
+        sh: cat {{.CERT_PATH}} | base64
 
   plan:
     desc: Reviews Terraform plan
     cmds:
-    - terraform -chdir=./infrastructure plan -var "region={{.REGION}}"
+    - terraform -chdir=./infrastructure plan -var "region={{.REGION}}" -var "certificate_base64_encoded={{.CERT}}" -var "certificate_password={{.CERT_PFX_PASS}}"
     vars:
       REGION: '{{default "southcentralus" .CLI_ARGS}}'
+      CERT:
+        sh: cat {{.CERT_PATH}} | base64
     
   creds:
     desc: Grab AKS credentials 
