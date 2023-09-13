@@ -11,7 +11,16 @@ resource "azurerm_user_assigned_identity" "aks_kubelet_identity" {
 }
 
 resource "azurerm_user_assigned_identity" "aks_service_mesh_identity" {
-  name                = "${local.aks_name}-${var.service_mesh_type}-pod-identity"
+  name                = local.aks_service_mesh_identity
   resource_group_name = azurerm_resource_group.this.name
   location            = azurerm_resource_group.this.location
+}
+
+resource "azurerm_federated_identity_credential" "aks_service_mesh_identity" {
+  name                = "istio-ingress-sa-identity"
+  resource_group_name = azurerm_resource_group.this.name
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = azurerm_kubernetes_cluster.this.oidc_issuer_url
+  parent_id           = azurerm_user_assigned_identity.aks_service_mesh_identity.id
+  subject             = "system:serviceaccount:istio-gateways:istio-ingress-sa-identity"
 }
