@@ -19,6 +19,7 @@ spec:
       labels:
         app: default-ingress-backend
     spec:
+      serviceAccountName: istio-ingress-sa-identity
       containers:
       - name: ingress
         image: nginx:latest
@@ -31,6 +32,17 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "500m"
+        volumeMounts:
+        - name: tls-mount
+          mountPath: "/mnt/secrets-store"
+          readOnly: true
+      volumes:
+      - name: tls-mount
+        csi:
+          driver: secrets-store.csi.k8s.io
+          readOnly: true
+          volumeAttributes:
+            secretProviderClass: "istio-tls"
 ---
 apiVersion: v1
 kind: Service
