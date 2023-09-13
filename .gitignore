@@ -3,6 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+.env
+
 .terraform/
 .terraform.tfstate.lock.info
 .terraform.lock.hcl 
