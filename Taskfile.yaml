@@ -9,7 +9,7 @@ tasks:
     - task: init
     - task: apply
     - task: creds
-    - task: appinsights
+    - task: configs
     vars:
       REGION: '{{default "southcentralus" .CLI_ARGS}}'
 
@@ -51,17 +51,29 @@ tasks:
       AKS: 
         sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
 
-  appinsights:
-    desc: Update Zipkin confiuration with proper AI Key
+  configs:
+    desc: Update configurations with proper values Key
     cmds:
     - export AI_INSTRUMENTATION_KEY={{.AI_INSTRUMENTATION_KEY}} ;
       envsubst < clusters/common/istio/configuration/zipkin.tmpl > clusters/common/istio/configuration/zipkin.yaml
+    - export INGRESS_CLIENT_ID={{.INGRESS_CLIENT_ID}} ;
+      envsubst < clusters/common/istio/gateway/serviceaccount.yaml.tmpl > clusters/common/istio/gateway/serviceaccount.yaml
+    - export KEYVAULT_NAME={{.KEYVAULT_NAME}} ;
+      export INGRESS_CLIENT_ID={{.INGRESS_CLIENT_ID}} ;
+      envsubst < clusters/common/istio/gateway/secretsprovider.tmpl > clusters/common/istio/gateway/secretsprovider.yaml
     - git add clusters/common/istio/configuration/zipkin.yaml
-    - git commit -m "Updated AI_INSTRUMENTATION_KEY value"
+    - git add clusters/common/istio/configuration/zipkin.yaml
+    - git add clusters/common/istio/configuration/zipkin.yaml
+    - git commit -m "Updated Configu values"
     - git push
     vars:
       AI_INSTRUMENTATION_KEY: 
         sh: terraform -chdir=./infrastructure output -raw AI_INSTRUMENTATION_KEY
+      KEYVAULT_NAME:
+        sh: terraform -chdir=./infrastructure output -raw KEYVAULT_NAME
+      INGRESS_CLIENT_ID:
+        sh: terraform -chdir=./infrastructure output -raw INGRESS_CLIENT_ID
+
 
   pods: 
     desc: Shows all pods and services deployed in the cluster
