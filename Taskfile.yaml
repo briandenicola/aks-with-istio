@@ -62,8 +62,8 @@ tasks:
       export INGRESS_CLIENT_ID={{.INGRESS_CLIENT_ID}} ;
       envsubst < clusters/common/istio/gateway/secretsprovider.tmpl > clusters/common/istio/gateway/secretsprovider.yaml
     - git add clusters/common/istio/configuration/zipkin.yaml
-    - git add clusters/common/istio/configuration/zipkin.yaml
-    - git add clusters/common/istio/configuration/zipkin.yaml
+    - git add clusters/common/istio/gateway/serviceaccount.yaml
+    - git add clusters/common/istio/gateway/secretsprovider.yaml
     - git commit -m "Updated Configu values"
     - git push
     vars:
