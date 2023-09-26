@@ -7,9 +7,10 @@ jobs:
     name: Deploy Cluster
     runs-on: self-hosted
     env:
-        ARM_USE_MSI: true 
-        ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-        ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      ARM_USE_MSI: true 
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      REGION: southcentralus
 
     defaults:
       run:
@@ -28,11 +29,13 @@ jobs:
 
     - name: "Terraform Init"
       id: init
-      run: terraform init
+      run: terraform -chdir=./infrastructure workspace new ${{ env.REGION }} || true; \ 
+           terraform -chdir=./infrastructure workspace select ${{ env.REGION }} \
+           terraform -chdir=./infrastructure init
       
     - name: "Terraform Plan"
       id: plan
-      run:  terraform plan -out="cluster.plan" 
+      run:  terraform plan -out="cluster.plan"  -va-var "region=${{ env.REGION }}" -var "certificate_base64_encoded=${{ secrets.CERTIFICATE }}" -var "certificate_password=${{ secrets.CERT_PASSWORD }}"
       continue-on-error: false 
 
     - name: "Terraform Apply"
