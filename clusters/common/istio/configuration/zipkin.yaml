@@ -99,7 +99,7 @@ data:
         loglevel: debug
       azuremonitor:
         endpoint: "https://dc.services.visualstudio.com/v2/track"
-        instrumentation_key: "cf571a9e-d1f6-41e4-a03f-ac3825485351"
+        instrumentation_key: "4b231302-43a6-42a3-910d-fa9f1cc9226d"
         maxbatchinterval: 10s
     service:
       extensions: [pprof, zpages, health_check]
