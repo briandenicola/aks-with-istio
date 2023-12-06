@@ -2,34 +2,51 @@
 	"name": "AKS Flux Extension Demo",
 	"build": {
 		"dockerfile": "Dockerfile",
-		"args": { 
+		"args": {
 			"VARIANT": "6.0-bullseye"
-		}		
+		}
 	},
-	"runArgs": ["--init", "--privileged"],
-
+	"runArgs": [
+		"--init",
+		"--privileged"
+	],
 	"customizations": {
-		"vscode": {	
+		"vscode": {
+			"vscode": {
+				"settings": {
+					"terminal.integrated.defaultProfile.linux": "zsh",
+					"terminal.integrated.profiles.linux": {
+						"zsh": {
+							"path": "zsh",
+							"icon": "terminal-bash"
+						}
+					}
+				}
+			},
 			"extensions": [
 				"ms-azuretools.vscode-docker",
 				"ms-kubernetes-tools.vscode-kubernetes-tools"
 			]
 		}
 	},
-
 	"remoteUser": "vscode",
 	"features": {
-		"ghcr.io/devcontainers/features/azure-cli:1": {},
-		"ghcr.io/devcontainers/features/common-utils:1": {},
+		"ghcr.io/devcontainers/features/azure-cli:1.2.2": {
+			"version": "latest",
+			"extensions": "aks-preview"
+		},
+		"ghcr.io/devcontainers/features/common-utils:2.3.0": {
+			"configureZshAsDefaultShell": true
+		},
 		"ghcr.io/devcontainers/features/terraform:1": {},
+		"ghcr.io/devcontainers/features/powershell:1.2.0": {},
+		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},		
 		"ghcr.io/devcontainers/features/docker-from-docker:1": {},
 		"ghcr.io/devcontainers/features/sshd:1": {
 			"version": "latest"
 		}
 	},
-
 	"waitFor": "postCreateCommand",
-
 	"postCreateCommand": "bash .devcontainer/post-create.sh",
 	"postStartCommand": "bash .devcontainer/post-start.sh"
 }

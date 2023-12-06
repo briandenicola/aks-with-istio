@@ -12,6 +12,6 @@ sudo mv /tmp/flux /usr/local/bin
 rm -f /tmp/flux2.tar.gz
 
 #Install aks kube tools
-sudo az aks install-cli
+#sudo az aks install-cli
 
 echo "$(date)    post-create complete" >> ~/status
