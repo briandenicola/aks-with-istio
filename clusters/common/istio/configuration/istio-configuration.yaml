@@ -6,20 +6,13 @@ metadata:
 data:
   mesh: |-
     defaultConfig:
-      discoveryAddress: istiod-asm-1-17.aks-istio-system.svc:15012
-      gatewayTopology:
-        numTrustedProxies: 1
-      image:
-        imageType: distroless
       tracing:
         zipkin:
           address:  address: otel-collector.otel-system.svc.cluster.local:9411
-    enablePrometheusMerge: true
     accessLogFile: /dev/stdout
     accessLogEncoding: JSON
     enableTracing: true
     outboundTrafficPolicy:
       mode: ALLOW_ANY
-    rootNamespace: aks-istio-system
-    trustDomain: cluster.local
+
   meshNetworks: 'networks: {}'
