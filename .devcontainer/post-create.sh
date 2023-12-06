@@ -11,6 +11,9 @@ tar -xf /tmp/flux2.tar.gz -C /tmp
 sudo mv /tmp/flux /usr/local/bin
 rm -f /tmp/flux2.tar.gz
 
+#Install Task
+sudo sh -c "$(curl -sL https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+
 #Install aks kube tools
 #sudo az aks install-cli
 
