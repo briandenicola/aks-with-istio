@@ -17,6 +17,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   lifecycle {
     ignore_changes = [
       default_node_pool.0.node_count,
+      kubernetes_version
     ]
   }
 
@@ -95,7 +96,7 @@ resource "azurerm_kubernetes_cluster" "this" {
     network_plugin      = "azure"
     network_plugin_mode = "overlay"
     load_balancer_sku   = "standard"
-    //ebpf_data_plane     = "cilium"
+    ebpf_data_plane     = "cilium"
   }
 
   maintenance_window_auto_upgrade {
