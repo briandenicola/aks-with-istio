@@ -8,7 +8,7 @@ data:
     defaultConfig:
       tracing:
         zipkin:
-          address:  address: otel-collector.otel-system.svc.cluster.local:9411
+          address: otel-collector.otel-system.svc.cluster.local:9411
     accessLogFile: /dev/stdout
     accessLogEncoding: JSON
     enableTracing: true
