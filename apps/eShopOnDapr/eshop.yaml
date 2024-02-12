@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   name: eshopondapr
   labels:
-    istio.io/rev: asm-1-17
+    istio.io/rev: asm-1-18
   annotations:
     scheduler.alpha.kubernetes.io/defaultTolerations: '[{"key": "reservedFor", "operator": "Equal", "effect": "NoSchedule", "value": "apps"}]'
 ---
@@ -30,15 +30,13 @@ spec:
   targetNamespace: eshopondapr
   chart:
     spec:
-      chart: eshopondapr
-      version: '>=2.0.1'
+      chart: eShopOnDapr
+      version: '>=2.0.0'
       sourceRef:
         kind: HelmRepository
         name:  eshopondapr
         namespace: flux-system
       interval: 1m
   values:
-    gatewayDnsNameOrIP: eshop-api.bjdazure.tech
-    identityDnsNameOrIP: identity-api.bjdazure.tech
-    blazorDnsNameOrIP: shop.bjdazure.tech
-    istio_gateway: istio-gateway/default-bjdazure-tech-gw
+    hostname: shop.bjdazure.tech
+    istioGateway: aks-istio-ingress/default-bjdazure-tech-gw
