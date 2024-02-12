@@ -95,14 +95,16 @@ data:
       zpages:
         endpoint: :55679
     exporters:
+      logging:
+        loglevel: debug
       azuremonitor:
         endpoint: "https://dc.services.visualstudio.com/v2/track"
-        instrumentation_key: "50323b4a-92d6-4fec-81ef-9b36176ad311"
+        instrumentation_key: "aa508a96-7c8f-4a17-b4f6-fc7bd33536a1"
         maxbatchinterval: 10s
     service:
       extensions: [pprof, zpages, health_check]
       pipelines:
         traces:
           receivers: [zipkin]
-          exporters: [azuremonitor]
+          exporters: [azuremonitor,logging]
 ---
