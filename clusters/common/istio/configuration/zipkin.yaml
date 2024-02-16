@@ -97,7 +97,7 @@ data:
     exporters:
       azuremonitor:
         endpoint: "https://dc.services.visualstudio.com/v2/track"
-        instrumentation_key: "8f09f5d8-cb18-43fa-a309-48963ce06617"
+        instrumentation_key: "744ab9ff-0aa3-49cc-bf21-01a451791925"
         maxbatchinterval: 10s
     service:
       extensions: [pprof, zpages, health_check]
