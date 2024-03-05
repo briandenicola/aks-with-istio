@@ -29,6 +29,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   sku_tier                     = "Standard"
   automatic_channel_upgrade    = "patch"
   node_os_channel_upgrade      = "NodeImage"
+  support_plan                 = "KubernetesOfficial"
   oidc_issuer_enabled          = true
   workload_identity_enabled    = true
   azure_policy_enabled         = true
@@ -51,7 +52,6 @@ resource "azurerm_kubernetes_cluster" "this" {
       key_data = tls_private_key.rsa.public_key_openssh
     }
   }
-
 
   azure_active_directory_role_based_access_control {
     managed                = true
@@ -83,7 +83,8 @@ resource "azurerm_kubernetes_cluster" "this" {
     enable_auto_scaling = true
     min_count           = 3
     max_count           = 9
-    max_pods            = 60
+    max_pods            = 110
+
     upgrade_settings {
       max_surge = "33%"
     }

@@ -2,16 +2,17 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   depends_on = [
     azapi_update_resource.cluster_updates
   ]
+  
   lifecycle {
     ignore_changes = [
       node_count
     ]
   }
+
   name                  = "apps"
   kubernetes_cluster_id = azurerm_kubernetes_cluster.this.id
   vnet_subnet_id        = azurerm_subnet.nodes.id
   zones                 = local.zones
-  #vm_size               = "Standard_B4ms"
   vm_size               = var.vm_sku
   enable_auto_scaling   = true
   mode                  = "User"
