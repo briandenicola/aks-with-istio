@@ -1,6 +1,6 @@
 resource "azurerm_dashboard_grafana" "this" {
   depends_on = [
-    azapi_resource.azure_monitor_workspace
+    azurerm_monitor_workspace.this
   ]
 
   name                              = "${local.resource_name}-grafana"
@@ -11,12 +11,13 @@ resource "azurerm_dashboard_grafana" "this" {
   api_key_enabled                   = true
   deterministic_outbound_ip_enabled = true
   public_network_access_enabled     = true
+  grafana_major_version             = 10
 
   identity {
     type = "SystemAssigned"
   }
 
   azure_monitor_workspace_integrations {
-    resource_id = local.am_workspace_id
+    resource_id = azurerm_monitor_workspace.this.id
   }
 }
