@@ -7,18 +7,6 @@ resource "azurerm_log_analytics_workspace" "this" {
   daily_quota_gb                = 10
 }
 
-resource "azurerm_log_analytics_solution" "this" {
-  solution_name         = "ContainerInsights"
-  location              = azurerm_resource_group.this.location
-  resource_group_name   = azurerm_resource_group.this.name
-  workspace_resource_id = azurerm_log_analytics_workspace.this.id
-  workspace_name        = azurerm_log_analytics_workspace.this.name
-
-  plan {
-    publisher = "Microsoft"
-    product   = "OMSGallery/ContainerInsights"
-  }
-}
 
 resource "azurerm_application_insights" "this" {
   name                          = "${local.resource_name}-appinsights"
@@ -29,25 +17,6 @@ resource "azurerm_application_insights" "this" {
   local_authentication_disabled = false
 }
 
-locals {
-  container_insights_tables = ["ContainerLogV2"]
-}
-
-resource "azapi_resource_action" "this" {
-  for_each    = toset(local.container_insights_tables)
-  type        = "Microsoft.OperationalInsights/workspaces/tables@2022-10-01"
-  resource_id = "${azurerm_log_analytics_workspace.this.id}/tables/${each.key}"
-  method      = "PATCH"
-  body = jsonencode({
-    properties = {
-      plan = "Basic"
-    }
-  })
-
-  depends_on = [
-    azurerm_log_analytics_solution.this,
-  ]
-}
 
 resource "azurerm_monitor_data_collection_rule" "log_analytics" {
   name                = "${local.resource_name}-law-datacollection-rules"

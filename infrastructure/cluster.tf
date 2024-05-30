@@ -5,7 +5,7 @@ data "azurerm_kubernetes_service_versions" "current" {
 locals {
   kubernetes_version = data.azurerm_kubernetes_service_versions.current.versions[length(data.azurerm_kubernetes_service_versions.current.versions) - 2]
   allowed_ip_range   = ["${chomp(data.http.myip.response_body)}/32"]
-  zones              = var.region == "northcentralus" ? null : ["1", "2", "3"]
+  zones              = var.region == "northcentralus" ? null : toset(var.zones)
 }
 
 resource "tls_private_key" "rsa" {
@@ -81,8 +81,8 @@ resource "azurerm_kubernetes_cluster" "this" {
     os_disk_type        = "Ephemeral"
     type                = "VirtualMachineScaleSets"
     enable_auto_scaling = true
-    min_count           = 3
-    max_count           = 9
+    min_count           = 1
+    max_count           = 6
     max_pods            = 250
 
     upgrade_settings {
@@ -129,7 +129,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   storage_profile {
     blob_driver_enabled = true
     disk_driver_enabled = true
-    disk_driver_version = "v2"
+    #disk_driver_version = "v2"
     file_driver_enabled = true
   }
 

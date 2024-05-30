@@ -14,9 +14,14 @@ variable "region" {
   default     = "southcentralus"
 }
 
+variable "zones" {
+  description = "The values for the zones to deploy AKS to"
+  default     = ["1"]
+}
+
 variable "vm_sku" {
-  description = "The VM type for the system node pool"
-  default     = "Standard_D4ads_v5"
+  description = "The VM type for the node pools"
+  default     = "Standard_D4d_v5"
 }
 
 variable "certificate_base64_encoded" {
@@ -28,6 +33,6 @@ variable "certificate_password" {
 }
 
 variable "certificate_name" {
-  description      = "The name of the certificate to use for TLS"
-  default = "wildcard-certificate"
+  description = "The name of the certificate to use for TLS"
+  default     = "wildcard-certificate"
 }

@@ -15,6 +15,10 @@ metadata:
     component: otel-collector
 spec:
   ports:
+  - name: grpc
+    port: 4317
+    protocol: TCP
+    targetPort: 4317
   - name: zipkin
     port: 9411
     protocol: TCP
@@ -55,7 +59,9 @@ spec:
             cpu: 200m
             memory: 400Mi
         ports:
-          - containerPort: 9411 # Default endpoint for Zipkin receiver.
+          - containerPort: 9411
+          - containerPort: 4317
+          - containerPort: 13133          
         volumeMounts:
           - name: otel-collector-config-vol
             mountPath: /conf
@@ -78,31 +84,50 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: otel-collector-conf
+  name: otel-collector-config
   namespace: otel-system
-  labels:
-    app: opentelemetry
-    component: otel-collector-conf
 data:
-  otel-collector-config: |
+  otel-collector-config.yaml: |
     receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+            
       zipkin:
         endpoint: 0.0.0.0:9411
+
+    processors:
+      batch:
+
     extensions:
       health_check:
       pprof:
         endpoint: :1888
       zpages:
         endpoint: :55679
+
     exporters:
+      debug:
+        verbosity: detailed
+
       azuremonitor:
-        endpoint: "https://dc.services.visualstudio.com/v2/track"
-        instrumentation_key: "${AI_INSTRUMENTATION_KEY}"
-        maxbatchinterval: 10s
+        connection_string: "${AI_CONNECTION_STRING}"
+        maxbatchsize: 10
+        maxbatchinterval: 5s
+
     service:
-      extensions: [pprof, zpages, health_check]
+      extensions: [health_check]
       pipelines:
         traces:
           receivers: [zipkin]
-          exporters: [azuremonitor]
----
+          processors: [batch]
+          exporters: [debug,azuremonitor]
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug,azuremonitor]
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug,azuremonitor]

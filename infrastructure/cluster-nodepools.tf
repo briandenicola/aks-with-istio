@@ -18,13 +18,14 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   mode                  = "User"
   os_sku                = "Mariner"
   os_disk_type          = "Ephemeral"
-  os_disk_size_gb       = 30
-  node_count            = 3
-  min_count             = 3
-  max_count             = 6
+  os_disk_size_gb       = 100
+  max_pods              = 250 
+  node_count            = 1
+  min_count             = 1
+  max_count             = 3
 
   upgrade_settings {
-    max_surge = "25%"
+    max_surge = "33%"
   }
 
   node_taints = ["reservedFor=apps:NoSchedule"]
