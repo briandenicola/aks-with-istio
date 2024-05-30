@@ -75,9 +75,9 @@ spec:
             port: 13133
       volumes:
         - configMap:
-            name: otel-collector-conf
+            name: otel-collector-config
             items:
-              - key: otel-collector-config
+              - key: otel-collector-config.yaml
                 path: otel-collector-config.yaml
           name: otel-collector-config-vol
 ---

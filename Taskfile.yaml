@@ -54,7 +54,7 @@ tasks:
   configs:
     desc: Update configurations with proper values Key
     cmds:
-    - export AI_CONNECTION_STRING={{.AI_CONNECTION_STRING}} ;
+    - export AI_CONNECTION_STRING="{{.AI_CONNECTION_STRING}}" ;
       envsubst < clusters/common/istio/configuration/otel.tmpl > clusters/common/istio/configuration/otel.yaml
     - export INGRESS_CLIENT_ID={{.INGRESS_CLIENT_ID}} ;
       envsubst < clusters/common/istio/gateway/serviceaccount.tmpl > clusters/common/istio/gateway/serviceaccount.yaml
@@ -73,7 +73,6 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw KEYVAULT_NAME
       INGRESS_CLIENT_ID:
         sh: terraform -chdir=./infrastructure output -raw INGRESS_CLIENT_ID
-
 
   pods: 
     desc: Shows all pods and services deployed in the cluster
