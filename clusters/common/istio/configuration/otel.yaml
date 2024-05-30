@@ -112,7 +112,7 @@ data:
         verbosity: detailed
 
       azuremonitor:
-        connection_string: "InstrumentationKey=e86f82c6-a187-45a2-8ac8-ca5a25043de9"
+        connection_string: "InstrumentationKey=e86f82c6-a187-45a2-8ac8-ca5a25043de9;IngestionEndpoint=https://westus3-1.in.applicationinsights.azure.com/;ApplicationId=5df8486a-a232-4898-a194-dabb08a0d4c3"
         maxbatchsize: 10
         maxbatchinterval: 5s
 
