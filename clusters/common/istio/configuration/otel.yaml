@@ -51,7 +51,7 @@ spec:
           - "--config=/conf/otel-collector-config.yaml"
         resources:
           limits:
-            cpu: 1
+            cpu: 500m
             memory: 2Gi
           requests:
             cpu: 200m
@@ -64,18 +64,20 @@ spec:
           - name: otel-collector-config-vol
             mountPath: /conf
         livenessProbe:
-          httpGet:
-            path: /
-            port: 13133
+          tcpSocket:
+            port: 9411
+          initialDelaySeconds: 15
+          periodSeconds: 10
         readinessProbe:
-          httpGet:
-            path: /
-            port: 13133
+          tcpSocket:
+            port: 9411
+          initialDelaySeconds: 15
+          periodSeconds: 10        
       volumes:
         - configMap:
             name: otel-collector-config
             items:
-              - key: tel-collector-config.yaml
+              - key: otel-collector-config.yaml
                 path: otel-collector-config.yaml
           name: otel-collector-config-vol
 ---
