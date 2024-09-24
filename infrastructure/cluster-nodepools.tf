@@ -2,7 +2,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   depends_on = [
     azapi_update_resource.cluster_updates
   ]
-  
+
   lifecycle {
     ignore_changes = [
       node_count
@@ -14,12 +14,12 @@ resource "azurerm_kubernetes_cluster_node_pool" "app_node_pool" {
   vnet_subnet_id        = azurerm_subnet.nodes.id
   zones                 = local.zones
   vm_size               = var.vm_sku
-  enable_auto_scaling   = true
+  auto_scaling_enabled  = true
   mode                  = "User"
-  os_sku                = "Mariner"
+  os_sku                = "AzureLinux"
   os_disk_type          = "Ephemeral"
   os_disk_size_gb       = 100
-  max_pods              = 250 
+  max_pods              = 250
   node_count            = 1
   min_count             = 1
   max_count             = 3

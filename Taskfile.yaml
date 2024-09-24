@@ -1,7 +1,10 @@
 version: '3'
 
 dotenv: ['.env']
-
+vars:
+  TAGS: "A reference production deployment of AKS with Azure Service Mesh"
+  DEFAULT_REGION: canadacentral
+  
 tasks:
   up:
     desc: Builds end to end an AKS environment
@@ -11,7 +14,7 @@ tasks:
     - task: creds
     - task: configs
     vars:
-      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+      REGION: '{{default .DEFAULT_REGION .CLI_ARGS}}'
 
   init: 
     desc: Initializes Terraform
@@ -20,14 +23,14 @@ tasks:
     - terraform -chdir=./infrastructure workspace select {{.REGION}}
     - terraform -chdir=./infrastructure init
     vars:
-      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+      REGION: '{{default .DEFAULT_REGION .CLI_ARGS}}'
 
   apply: 
     desc: Applies Terraform configuration
     cmds:
-    - terraform -chdir=./infrastructure apply -auto-approve -var "region={{.REGION}}" -var "certificate_base64_encoded={{.CERT}}" -var "certificate_password={{.CERT_PFX_PASS}}"
+    - terraform -chdir=./infrastructure apply -auto-approve -var "tags={{.TAGS}}" -var "region={{.REGION}}" -var "certificate_base64_encoded={{.CERT}}" -var "certificate_password={{.CERT_PFX_PASS}}"
     vars:
-      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+      REGION: '{{default .DEFAULT_REGION .CLI_ARGS}}'
       CERT:
         sh: cat {{.CERT_PATH}} | base64
 
@@ -36,7 +39,7 @@ tasks:
     cmds:
     - terraform -chdir=./infrastructure plan -var "region={{.REGION}}" -var "certificate_base64_encoded={{.CERT}}" -var "certificate_password={{.CERT_PFX_PASS}}"
     vars:
-      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+      REGION: '{{default .DEFAULT_REGION .CLI_ARGS}}'
       CERT:
         sh: cat {{.CERT_PATH}} | base64
     
@@ -100,11 +103,7 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
 
   down:
-    desc: Destroys all Azure resources and cleans up terraform
+    desc: Destroys all Azure resources and cleans up Terraform
     cmds:
-    - az group delete -n {{.RG}} --yes --no-wait || true
-    - cd infrastructure ;
-      rm -rf terraform.tfstate.d .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info
-    vars:
-      RG: 
-        sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP
+    - az group list --tag Application="{{.TAGS}}" --query "[].name" -o tsv | xargs -ot -n 1 az group delete -y --verbose --no-wait -n  || true
+    - rm -rf terraform.tfstate.d .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info

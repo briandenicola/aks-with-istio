@@ -1,3 +1,5 @@
+
+
 resource "azurerm_virtual_network" "this" {
   name                = "${local.resource_name}-network"
   address_space       = [ local.vnet_cidr ]

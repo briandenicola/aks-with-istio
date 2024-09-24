@@ -1,7 +1,7 @@
 resource "azurerm_monitor_diagnostic_setting" "aks" {
   name                       = "${local.aks_name}-diag"
   target_resource_id         = azurerm_kubernetes_cluster.this.id
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.this.id
+  log_analytics_workspace_id = module.azure_monitor.LOG_ANALYTICS_WORKSPACE_ID
 
   enabled_log  {
     category = "kube-apiserver"

@@ -1,19 +1,3 @@
-data "azurerm_client_config" "current" {}
-data "azurerm_subscription" "current" {}
-
-data "http" "myip" {
-  url = "http://checkip.amazonaws.com/"
-}
-
-resource "random_id" "this" {
-  byte_length = 2
-}
-
-resource "random_pet" "this" {
-  length    = 1
-  separator = ""
-}
-
 resource "random_integer" "vnet_cidr" {
   min = 25
   max = 250
@@ -42,6 +26,7 @@ locals {
   api_subnet_cidir          = cidrsubnet(local.vnet_cidr, 12, 1)
   nodes_subnet_cidir        = cidrsubnet(local.vnet_cidr, 8, 2)
   aks_service_mesh_identity = "${local.aks_name}-${var.service_mesh_type}-pod-identity"
+  environment_type          = "Production"
 }
 
 resource "azurerm_resource_group" "this" {
@@ -49,8 +34,16 @@ resource "azurerm_resource_group" "this" {
   location = local.location
 
   tags = {
-    Application = "httpdemo"
+    Application = var.tags
     Components  = "aks; flux; istio; kured; dapr"
     DeployedOn  = timestamp()
   }
+}
+
+module "azure_monitor" {
+  source               = "./observability"
+  region               = var.region
+  resource_name        = local.resource_name
+  tags                 = var.tags
+  sdlc_environment     = local.environment_type
 }

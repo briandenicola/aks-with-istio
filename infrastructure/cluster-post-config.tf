@@ -22,5 +22,18 @@ resource "azapi_update_resource" "cluster_updates" {
   })
 }
 
-#https://grafana.com/grafana/dashboards/18814-kubernetes-networking/
-#https://grafana.com/grafana/dashboards/16611-cilium-metrics/
+resource "azurerm_monitor_data_collection_rule_association" "this" {
+  depends_on = [
+    module.azure_monitor,
+    azurerm_kubernetes_cluster.this
+  ]
+  name                    = "${local.resource_name}-ama-datacollection-rules-association"
+  target_resource_id      = azurerm_kubernetes_cluster.this.id
+  data_collection_rule_id = module.azure_monitor.DATA_COLLECTION_RULES_ID
+}
+
+resource "azurerm_monitor_data_collection_rule_association" "container_insights" {
+  name                        = "${local.resource_name}-ama-container-insights-rules-association"
+  target_resource_id          = azurerm_kubernetes_cluster.this.id
+  data_collection_rule_id     = module.azure_monitor.DATA_COLLECTION_RULE_CONTAINER_INSIGHTS_ID
+}

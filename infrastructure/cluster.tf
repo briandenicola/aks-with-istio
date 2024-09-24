@@ -4,6 +4,7 @@ data "azurerm_kubernetes_service_versions" "current" {
 
 locals {
   kubernetes_version = data.azurerm_kubernetes_service_versions.current.versions[length(data.azurerm_kubernetes_service_versions.current.versions) - 2]
+  istio_version      = "asm-1-22"
   allowed_ip_range   = ["${chomp(data.http.myip.response_body)}/32"]
   zones              = var.region == "northcentralus" ? null : toset(var.zones)
 }
@@ -14,6 +15,10 @@ resource "tls_private_key" "rsa" {
 }
 
 resource "azurerm_kubernetes_cluster" "this" {
+  depends_on = [ 
+    module.azure_monitor
+  ]
+
   lifecycle {
     ignore_changes = [
       default_node_pool.0.node_count,
@@ -27,8 +32,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   node_resource_group          = "${local.resource_name}_k8s_nodes_rg"
   dns_prefix                   = local.aks_name
   sku_tier                     = "Standard"
-  automatic_channel_upgrade    = "patch"
-  node_os_channel_upgrade      = "NodeImage"
+  automatic_upgrade_channel    = "patch"
+  node_os_upgrade_channel      = "NodeImage"
   support_plan                 = "KubernetesOfficial"
   oidc_issuer_enabled          = true
   workload_identity_enabled    = true
@@ -41,9 +46,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   image_cleaner_interval_hours = 48
 
   api_server_access_profile {
-    vnet_integration_enabled = true
-    subnet_id                = azurerm_subnet.api.id
-    authorized_ip_ranges     = local.allowed_ip_range
+    authorized_ip_ranges = local.allowed_ip_range
   }
 
   linux_profile {
@@ -54,9 +57,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   azure_active_directory_role_based_access_control {
-    managed                = true
-    azure_rbac_enabled     = true
-    tenant_id              = data.azurerm_client_config.current.tenant_id
+    azure_rbac_enabled = true
+    tenant_id          = data.azurerm_client_config.current.tenant_id
   }
 
   identity {
@@ -71,19 +73,19 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   default_node_pool {
-    name                = "system"
-    node_count          = 3
-    vm_size             = var.vm_sku
-    zones               = local.zones
-    os_disk_size_gb     = 100
-    vnet_subnet_id      = azurerm_subnet.nodes.id
-    os_sku              = "Mariner"
-    os_disk_type        = "Ephemeral"
-    type                = "VirtualMachineScaleSets"
-    enable_auto_scaling = true
-    min_count           = 1
-    max_count           = 6
-    max_pods            = 250
+    name                 = "system"
+    node_count           = 3
+    vm_size              = var.vm_sku
+    zones                = local.zones
+    os_disk_size_gb      = 100
+    vnet_subnet_id       = azurerm_subnet.nodes.id
+    os_sku               = "AzureLinux"
+    os_disk_type         = "Ephemeral"
+    type                 = "VirtualMachineScaleSets"
+    auto_scaling_enabled = true
+    min_count            = 1
+    max_count            = 6
+    max_pods             = 250
 
     upgrade_settings {
       max_surge = "33%"
@@ -97,25 +99,26 @@ resource "azurerm_kubernetes_cluster" "this" {
     network_plugin      = "azure"
     network_plugin_mode = "overlay"
     load_balancer_sku   = "standard"
-    ebpf_data_plane     = "cilium"
+    network_data_plane  = "cilium"
+    network_policy      = "cilium"
   }
 
   maintenance_window_auto_upgrade {
-    frequency = "Weekly"
-    interval  = 1
-    duration  = 4
+    frequency   = "Weekly"
+    interval    = 1
+    duration    = 4
     day_of_week = "Friday"
-    utc_offset = "-06:00"
-    start_time = "20:00"
+    utc_offset  = "-06:00"
+    start_time  = "20:00"
   }
 
   maintenance_window_node_os {
-    frequency = "Weekly"
-    interval  = 1
-    duration  = 4
+    frequency   = "Weekly"
+    interval    = 1
+    duration    = 4
     day_of_week = "Saturday"
-    utc_offset = "-06:00"
-    start_time = "20:00"
+    utc_offset  = "-06:00"
+    start_time  = "20:00"
   }
 
   auto_scaler_profile {
@@ -129,28 +132,28 @@ resource "azurerm_kubernetes_cluster" "this" {
   storage_profile {
     blob_driver_enabled = true
     disk_driver_enabled = true
-    #disk_driver_version = "v2"
     file_driver_enabled = true
   }
 
   oms_agent {
-    log_analytics_workspace_id      = azurerm_log_analytics_workspace.this.id
+    log_analytics_workspace_id      = module.azure_monitor.LOG_ANALYTICS_WORKSPACE_ID
     msi_auth_for_monitoring_enabled = true
   }
 
   microsoft_defender {
-    log_analytics_workspace_id      = azurerm_log_analytics_workspace.this.id
+    log_analytics_workspace_id = module.azure_monitor.LOG_ANALYTICS_WORKSPACE_ID
   }
 
   monitor_metrics {
   }
-  
+
   key_vault_secrets_provider {
     secret_rotation_enabled = true
   }
 
   service_mesh_profile {
-    mode                             = "Istio" 
+    mode                             = "Istio"
     internal_ingress_gateway_enabled = true
+    revisions                        = [local.istio_version]
   }
 }

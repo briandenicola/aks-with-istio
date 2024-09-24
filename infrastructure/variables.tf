@@ -1,7 +1,11 @@
 variable "namespace" {
-  description = "The namespace for the workload identity"
+  description = "The default namespace for the applications"
   type        = string
   default     = "default"
+}
+
+variable "tags" {
+  description = "The tag to be applied to all Resources"
 }
 
 variable "service_mesh_type" {

@@ -6,8 +6,8 @@ metadata:
   labels:
     app.kubernetes.io/name: knative-serving
     app.kubernetes.io/component: controller
-    app.kubernetes.io/version: "1.11.1"
-    serving.knative.dev/release: "v1.11.1"
+    app.kubernetes.io/version: "1.15.2"
+    serving.knative.dev/release: "v1.15.2"
   annotations:
     knative.dev/bjdazure-checksum: "81552d0b"
 data:

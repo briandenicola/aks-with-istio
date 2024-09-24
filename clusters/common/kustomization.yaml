@@ -4,5 +4,3 @@ resources:
   - ./prometheus
   - knative.yaml
   - kured.yaml
-  #- dapr.yaml
-  #- kubecost.yaml
