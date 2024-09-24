@@ -2,8 +2,6 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: otel-system
-  labels:
-    istio-injection: enabled
 ---
 apiVersion: v1
 kind: Service
@@ -75,7 +73,7 @@ spec:
             port: 13133
       volumes:
         - configMap:
-            name: otel-collector-conf
+            name: otel-collector-config
             items:
               - key: tel-collector-config.yaml
                 path: otel-collector-config.yaml
