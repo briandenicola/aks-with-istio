@@ -1,0 +1,133 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: otel-system
+  labels:
+    istio-injection: enabled
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: otel-collector
+  namespace: otel-system
+  labels:
+    app: opencensus
+    component: otel-collector
+spec:
+  ports:
+  - name: grpc
+    port: 4317
+    protocol: TCP
+    targetPort: 4317
+  - name: zipkin
+    port: 9411
+    protocol: TCP
+    targetPort: 9411
+  selector:
+    component: otel-collector
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: otel-collector
+  namespace: otel-system
+  labels:
+    app: opentelemetry
+    component: otel-collector
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: opentelemetry
+  template:
+    metadata:
+      labels:
+        app: opentelemetry
+        component: otel-collector
+    spec:
+      containers:
+      - name: otel-collector
+        image: otel/opentelemetry-collector-contrib-dev:latest
+        command:
+          - "/otelcontribcol"
+          - "--config=/conf/otel-collector-config.yaml"
+        resources:
+          limits:
+            cpu: 1
+            memory: 2Gi
+          requests:
+            cpu: 200m
+            memory: 400Mi
+        ports:
+          - containerPort: 9411
+          - containerPort: 4317
+          - containerPort: 13133          
+        volumeMounts:
+          - name: otel-collector-config-vol
+            mountPath: /conf
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 13133
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 13133
+      volumes:
+        - configMap:
+            name: otel-collector-conf
+            items:
+              - key: tel-collector-config.yaml
+                path: otel-collector-config.yaml
+          name: otel-collector-config-vol
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+  namespace: otel-system
+data:
+  otel-collector-config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+            
+      zipkin:
+        endpoint: 0.0.0.0:9411
+
+    processors:
+      batch:
+
+    extensions:
+      health_check:
+      pprof:
+        endpoint: :1888
+      zpages:
+        endpoint: :55679
+
+    exporters:
+      debug:
+        verbosity: detailed
+
+      azuremonitor:
+        connection_string: "InstrumentationKey=228a91eb-fae3-4e23-bef0-fd5b7ea287c8;IngestionEndpoint=https://canadacentral-1.in.applicationinsights.azure.com/;LiveEndpoint=https://canadacentral.livediagnostics.monitor.azure.com/;ApplicationId=4b304e68-8ce6-42ec-951a-b1b339121be1"
+        maxbatchsize: 10
+        maxbatchinterval: 5s
+
+    service:
+      extensions: [health_check]
+      pipelines:
+        traces:
+          receivers: [zipkin]
+          processors: [batch]
+          exporters: [debug,azuremonitor]
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug,azuremonitor]
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [debug,azuremonitor]
