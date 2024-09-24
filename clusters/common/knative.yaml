@@ -11,3 +11,6 @@ spec:
   path: ./clusters/common/knative
   prune: true
   validation: client
+  #
+  # Version: 1.15.2
+  #
