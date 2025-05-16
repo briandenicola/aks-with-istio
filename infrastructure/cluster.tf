@@ -4,7 +4,7 @@ data "azurerm_kubernetes_service_versions" "current" {
 
 locals {
   kubernetes_version = data.azurerm_kubernetes_service_versions.current.versions[length(data.azurerm_kubernetes_service_versions.current.versions) - 2]
-  istio_version      = "asm-1-22"
+  istio_version      = "asm-1-24"
   allowed_ip_range   = ["${chomp(data.http.myip.response_body)}/32"]
   zones              = var.region == "northcentralus" ? null : toset(var.zones)
 }

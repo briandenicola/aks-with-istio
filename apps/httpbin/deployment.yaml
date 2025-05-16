@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   name: apps
   labels:
-    istio.io/rev: asm-1-22
+    istio.io/rev: asm-1-24
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/enforce-version: v1.25
     pod-security.kubernetes.io/audit: restricted

@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   name: eshopondapr
   labels:
-    istio.io/rev: asm-1-22
+    istio.io/rev: asm-1-24
   annotations:
     scheduler.alpha.kubernetes.io/defaultTolerations: '[{"key": "reservedFor", "operator": "Equal", "effect": "NoSchedule", "value": "apps"}]'
 ---
